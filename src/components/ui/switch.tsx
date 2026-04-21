@@ -1,31 +1,55 @@
-import * as React from "react"
-import { Switch as SwitchPrimitive } from "radix-ui"
+'use client'
+import { ark } from '@ark-ui/react'
+import { Switch, useSwitchContext } from '@ark-ui/react/switch'
+import { type ComponentProps, forwardRef, type ReactNode } from 'react'
+import { createStyleContext, styled } from 'styled-system/jsx'
+import { switchRecipe } from 'styled-system/recipes'
 
-import { cn } from "@/lib/utils"
+const { withProvider, withContext } = createStyleContext(switchRecipe)
 
-function Switch({
-  className,
-  size = "default",
-  ...props
-}: React.ComponentProps<typeof SwitchPrimitive.Root> & {
-  size?: "sm" | "default"
-}) {
-  return (
-    <SwitchPrimitive.Root
-      data-slot="switch"
-      data-size={size}
-      className={cn(
-        "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 data-disabled:cursor-not-allowed data-disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
-      <SwitchPrimitive.Thumb
-        data-slot="switch-thumb"
-        className="pointer-events-none block rounded-full bg-background ring-0 transition-transform group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0 dark:data-unchecked:bg-foreground"
-      />
-    </SwitchPrimitive.Root>
-  )
+export type RootProps = ComponentProps<typeof Root>
+export const Root = withProvider(Switch.Root, 'root')
+export const RootProvider = withProvider(Switch.RootProvider, 'root')
+export const Label = withContext(Switch.Label, 'label')
+export const Thumb = withContext(Switch.Thumb, 'thumb')
+export const HiddenInput = Switch.HiddenInput
+
+export const Control = withContext(Switch.Control, 'control', {
+  defaultProps: { children: <Thumb /> },
+})
+
+export { SwitchContext as Context } from '@ark-ui/react/switch'
+
+interface IndicatorProps extends ComponentProps<typeof StyledIndicator> {
+  fallback?: ReactNode | undefined
 }
 
-export { Switch }
+const StyledIndicator = withContext(ark.span, 'indicator')
+export const Indicator = forwardRef<HTMLSpanElement, IndicatorProps>(
+  function Indicator(props, ref) {
+    const { fallback, children, ...rest } = props
+    const api = useSwitchContext()
+    return (
+      <StyledIndicator ref={ref} data-checked={api.checked ? '' : undefined} {...rest}>
+        {api.checked ? children : fallback}
+      </StyledIndicator>
+    )
+  },
+)
+
+interface ThumbIndicatorProps extends ComponentProps<typeof StyledThumbIndicator> {
+  fallback?: React.ReactNode | undefined
+}
+
+const StyledThumbIndicator = styled(ark.span)
+export const ThumbIndicator = forwardRef<HTMLSpanElement, ThumbIndicatorProps>(
+  function SwitchThumbIndicator(props, ref) {
+    const { fallback, children, ...rest } = props
+    const api = useSwitchContext()
+    return (
+      <StyledThumbIndicator ref={ref} data-checked={api.checked ? '' : undefined} {...rest}>
+        {api.checked ? children : fallback}
+      </StyledThumbIndicator>
+    )
+  },
+)
