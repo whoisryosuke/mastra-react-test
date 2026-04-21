@@ -1,42 +1,35 @@
 import * as React from "react"
-import { HoverCard as HoverCardPrimitive } from "radix-ui"
+import { HoverCard } from '@ark-ui/react/hover-card'
 
-import { cn } from "@/lib/utils"
-
-function HoverCard({
-  ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Root>) {
-  return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />
+const HoverCardRoot = (props: any) => {
+  return <HoverCard.Root data-slot="hover-card" {...props} />
 }
 
-function HoverCardTrigger({
-  ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {
+const HoverCardTrigger = (props: any) => {
   return (
-    <HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
+    <HoverCard.Trigger data-slot="hover-card-trigger" {...props} />
   )
 }
 
-function HoverCardContent({
+const HoverCardContent = React.forwardRef(({ 
   className,
   align = "center",
   sideOffset = 4,
   ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
+}: any, ref: any) => {
   return (
-    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
-      <HoverCardPrimitive.Content
+    <HoverCard.Portal data-slot="hover-card-portal">
+      <HoverCard.Content
         data-slot="hover-card-content"
         align={align}
         sideOffset={sideOffset}
-        className={cn(
-          "z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-          className
-        )}
+        className={className}
+        ref={ref}
         {...props}
       />
-    </HoverCardPrimitive.Portal>
+    </HoverCard.Portal>
   )
-}
+})
 
-export { HoverCard, HoverCardTrigger, HoverCardContent }
+// Re-export the components
+export { HoverCardRoot as HoverCard, HoverCardTrigger, HoverCardContent }
