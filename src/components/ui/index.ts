@@ -7,6 +7,7 @@ export { Button, ButtonGroup, type ButtonGroupProps, type ButtonProps } from "./
 export * as Card from "./card";
 export * as Carousel from "./carousel";
 export * as Collapsible from "./collapsible";
+export * as Command from "./command";
 export * as Dialog from "./dialog";
 export { Group, type GroupProps } from "./group";
 export { Input, type InputProps } from "./input";

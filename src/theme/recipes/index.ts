@@ -20,6 +20,7 @@ import { spinner } from "./spinner";
 import { absoluteCenter } from "./absolute-center";
 import { group } from "./group";
 import { button } from "./button";
+import { command } from "./command";
 export const recipes = {
   button,
   group,
@@ -42,6 +43,7 @@ export const recipes = {
   progress,
   scrollArea,
   select,
-  accordion
+  accordion,
+  command,
 }
 export const slotRecipes = {}
