@@ -1,10 +1,7 @@
-import { cn } from "@/lib/utils"
-import { Loader2Icon } from "lucide-react"
+import { ark } from '@ark-ui/react/factory'
+import type { ComponentProps } from 'react'
+import { styled } from 'styled-system/jsx'
+import { spinner } from 'styled-system/recipes'
 
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
-  return (
-    <Loader2Icon role="status" aria-label="Loading" className={cn("size-4 animate-spin", className)} {...props} />
-  )
-}
-
-export { Spinner }
+export type SpinnerProps = ComponentProps<typeof Spinner>
+export const Spinner = styled(ark.span, spinner)

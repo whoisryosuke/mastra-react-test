@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "prepare": "panda codegen",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.170",
+    "@ark-ui/react": "^5.36.1",
     "@mastra/ai-sdk": "^1.4.0",
     "@radix-ui/react-use-controllable-state": "^1.2.2",
     "@rive-app/react-webgl2": "^4.28.1",
@@ -41,6 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@pandacss/dev": "^1.10.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
