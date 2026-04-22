@@ -51,11 +51,11 @@ const toolHeaderStyles = css({
 });
 
 const promptInputStyles = css({
-  marginTop: "20",
+  marginTop: "2",
 });
 
 const textareaStyles = css({
-  lineHeight: { base: "normal", md: "10" },
+  lineHeight: { base: "normal" },
 });
 
 export default function App() {
