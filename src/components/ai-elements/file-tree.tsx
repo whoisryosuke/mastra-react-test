@@ -191,12 +191,7 @@ export const FileTreeFolder = ({
   return (
     <FileTreeFolderContext.Provider value={folderContextValue}>
       <Collapsible.Root onOpenChange={handleOpenChange} open={isExpanded}>
-        <div
-          className={css({}, className)}
-          role="treeitem"
-          tabIndex={0}
-          {...props}
-        >
+        <div className={className} role="treeitem" tabIndex={0} {...props}>
           <div
             className={css(
               {
