@@ -14,7 +14,7 @@ import * as HoverCard from "@/components/ui/hover-card";
 import { InputGroup } from "@/components/ui/input-group";
 import * as Select from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { css } from "styled-system/css";
+import { css, cx } from "styled-system/css";
 import type { ChatStatus, FileUIPart, SourceDocumentUIPart } from "ai";
 import {
   CornerDownLeftIcon,
@@ -22,6 +22,7 @@ import {
   Monitor,
   PlusIcon,
   SquareIcon,
+  UploadIcon,
   XIcon,
 } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -48,8 +49,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { cn } from "@/lib/utils";
-import { Button, Textarea, Tooltip } from "../ui";
+import { Button, FileUpload, Heading, Text, Textarea, Tooltip } from "../ui";
 import { Flex } from "styled-system/jsx";
 
 // ============================================================================
@@ -883,16 +883,23 @@ export const PromptInput = ({
   // Render with or without local provider
   const inner = (
     <>
-      <input
-        accept={accept}
-        aria-label="Upload files"
-        className="hidden"
-        multiple={multiple}
-        onChange={handleChange}
-        ref={inputRef}
-        title="Upload files"
-        type="file"
-      />
+      <FileUpload.Root>
+        <FileUpload.HiddenInput
+          accept={accept}
+          aria-label="Upload files"
+          multiple={multiple}
+          onChange={handleChange}
+          ref={inputRef}
+          title="Upload files"
+          type="file"
+        />
+        <FileUpload.Trigger asChild>
+          <Button variant="outline" size="sm">
+            <UploadIcon /> Upload file
+          </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List clearable showSize />
+      </FileUpload.Root>
       <form
         className={className}
         onSubmit={handleSubmit}
@@ -925,8 +932,14 @@ export const PromptInputBody = ({
   className,
   ...props
 }: PromptInputBodyProps) => (
-  <div className={cn("contents", className)} {...props} />
+  <div className={cx("contents", className)} {...props} />
 );
+
+export const fieldSizing = css({
+  h: "auto", // ← field-sizing-content
+  maxH: "48", // ← max‑h‑48  (12rem)
+  minH: "16", // ← min‑h‑16  (4rem)
+});
 
 export type PromptInputTextareaProps = ComponentProps<typeof Textarea>;
 
@@ -1032,7 +1045,7 @@ export const PromptInputTextarea = ({
 
   return (
     <Textarea
-      className={cn("field-sizing-content max-h-48 min-h-16", className)}
+      className={cx(fieldSizing, className)}
       name="message"
       onCompositionEnd={handleCompositionEnd}
       onCompositionStart={handleCompositionStart}
@@ -1045,6 +1058,12 @@ export const PromptInputTextarea = ({
   );
 };
 
+export const flexFirstWrapGap = css({
+  order: "-9999", // ← order-first
+  flexWrap: "wrap", // ← flex-wrap
+  gap: "1", // ← gap-1
+});
+
 export type PromptInputHeaderProps = Omit<ComponentProps<typeof Flex>, "align">;
 
 export const PromptInputHeader = ({
@@ -1053,7 +1072,7 @@ export const PromptInputHeader = ({
 }: PromptInputHeaderProps) => (
   <Flex
     align="block-end"
-    className={cn("order-first flex-wrap gap-1", className)}
+    className={cx(flexFirstWrapGap, className)}
     {...props}
   />
 );
@@ -1066,7 +1085,9 @@ export const PromptInputFooter = ({
 }: PromptInputFooterProps) => (
   <Flex
     align="block-end"
-    className={cn("justify-between gap-1", className)}
+    alignItems="justify-between"
+    gap="1"
+    className={className}
     {...props}
   />
 );
@@ -1077,8 +1098,11 @@ export const PromptInputTools = ({
   className,
   ...props
 }: PromptInputToolsProps) => (
-  <div
-    className={cn("flex min-w-0 items-center gap-1", className)}
+  <Flex
+    minWidth="0"
+    alignItems="center"
+    gap="1"
+    className={className}
     {...props}
   />
 );
@@ -1106,7 +1130,7 @@ export const PromptInputButton = ({
 
   const button = (
     <Button
-      className={cn(className)}
+      className={cx(className)}
       size={newSize}
       type="button"
       variant={variant}
@@ -1129,7 +1153,9 @@ export const PromptInputButton = ({
         <>
           {tooltipContent}
           {shortcut && (
-            <span className="ml-2 text-muted-foreground">{shortcut}</span>
+            <Text as="span" color="fg.muted">
+              {shortcut}
+            </Text>
           )}
         </>
       }
@@ -1168,7 +1194,7 @@ export const PromptInputActionMenuContent = ({
 }: PromptInputActionMenuContentProps) => (
   <DropdownMenu.DropdownMenuContent
     align="start"
-    className={cn(className)}
+    className={cx(className)}
     {...props}
   />
 );
@@ -1180,7 +1206,7 @@ export const PromptInputActionMenuItem = ({
   className,
   ...props
 }: PromptInputActionMenuItemProps) => (
-  <DropdownMenu.DropdownMenuItem className={cn(className)} {...props} />
+  <DropdownMenu.DropdownMenuItem className={cx(className)} {...props} />
 );
 
 // Note: Actions that perform side-effects (like opening a file dialog)
@@ -1228,7 +1254,7 @@ export const PromptInputSubmit = ({
   return (
     <Button
       aria-label={isGenerating ? "Stop" : "Submit"}
-      className={cn(className)}
+      className={cx(className)}
       onClick={handleClick}
       size={size}
       type={isGenerating && onStop ? "button" : "submit"}
@@ -1250,18 +1276,33 @@ export type PromptInputSelectTriggerProps = ComponentProps<
   typeof Select.Trigger
 >;
 
+export const selectTriggerStyles = css({
+  // base styles
+  border: "0",
+  bg: "transparent", // backgroundColor
+  fontWeight: "medium",
+  color: "mutedForeground", // semantic token (ensure it exists in your theme)
+  shadow: "none",
+  transitionProperty: "colors",
+
+  // hover state
+  _hover: {
+    bg: "accent",
+    color: "foreground",
+  },
+
+  // aria‑expanded state – apply when the attribute is present and true
+  "&[aria-expanded=true]": {
+    bg: "accent",
+    color: "foreground",
+  },
+});
+
 export const PromptInputSelectTrigger = ({
   className,
   ...props
 }: PromptInputSelectTriggerProps) => (
-  <Select.Trigger
-    className={cn(
-      "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
-      "hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
-      className,
-    )}
-    {...props}
-  />
+  <Select.Trigger className={cx(selectTriggerStyles, className)} {...props} />
 );
 
 export type PromptInputSelectContentProps = ComponentProps<
@@ -1272,7 +1313,7 @@ export const PromptInputSelectContent = ({
   className,
   ...props
 }: PromptInputSelectContentProps) => (
-  <Select.Content className={cn(className)} {...props} />
+  <Select.Content className={cx(className)} {...props} />
 );
 
 export type PromptInputSelectItemProps = ComponentProps<typeof Select.Item>;
@@ -1281,7 +1322,7 @@ export const PromptInputSelectItem = ({
   className,
   ...props
 }: PromptInputSelectItemProps) => (
-  <Select.Item className={cn(className)} {...props} />
+  <Select.Item className={cx(className)} {...props} />
 );
 
 export type PromptInputSelectValueProps = ComponentProps<
@@ -1292,57 +1333,48 @@ export const PromptInputSelectValue = ({
   className,
   ...props
 }: PromptInputSelectValueProps) => (
-  <Select.ValueText className={cn(className)} {...props} />
+  <Select.ValueText className={cx(className)} {...props} />
 );
 
-export type PromptInputHoverCardProps = ComponentProps<
-  typeof HoverCard.HoverCard
->;
+export type PromptInputHoverCardProps = ComponentProps<typeof HoverCard.Root>;
 
 export const PromptInputHoverCard = ({
   openDelay = 0,
   closeDelay = 0,
   ...props
 }: PromptInputHoverCardProps) => (
-  <HoverCard.HoverCard
-    closeDelay={closeDelay}
-    openDelay={openDelay}
-    {...props}
-  />
+  <HoverCard.Root closeDelay={closeDelay} openDelay={openDelay} {...props} />
 );
 
 export type PromptInputHoverCardTriggerProps = ComponentProps<
-  typeof HoverCard.HoverCardTrigger
+  typeof HoverCard.Trigger
 >;
 
 export const PromptInputHoverCardTrigger = (
   props: PromptInputHoverCardTriggerProps,
-) => <HoverCard.HoverCardTrigger {...props} />;
+) => <HoverCard.Trigger {...props} />;
 
 export type PromptInputHoverCardContentProps = ComponentProps<
-  typeof HoverCard.HoverCardContent
+  typeof HoverCard.Content
 >;
 
 export const PromptInputHoverCardContent = ({
-  align = "start",
   ...props
-}: PromptInputHoverCardContentProps) => (
-  <HoverCard.HoverCardContent align={align} {...props} />
-);
+}: PromptInputHoverCardContentProps) => <HoverCard.Content {...props} />;
 
 export type PromptInputTabsListProps = HTMLAttributes<HTMLDivElement>;
 
 export const PromptInputTabsList = ({
   className,
   ...props
-}: PromptInputTabsListProps) => <div className={cn(className)} {...props} />;
+}: PromptInputTabsListProps) => <div className={cx(className)} {...props} />;
 
 export type PromptInputTabProps = HTMLAttributes<HTMLDivElement>;
 
 export const PromptInputTab = ({
   className,
   ...props
-}: PromptInputTabProps) => <div className={cn(className)} {...props} />;
+}: PromptInputTabProps) => <div className={cx(className)} {...props} />;
 
 export type PromptInputTabLabelProps = HTMLAttributes<HTMLHeadingElement>;
 
@@ -1352,11 +1384,14 @@ export const PromptInputTabLabel = ({
 }: PromptInputTabLabelProps) => (
   // Content provided via children in props
   // oxlint-disable-next-line eslint-plugin-jsx-a11y(heading-has-content)
-  <h3
-    className={cn(
-      "mb-2 px-3 font-medium text-muted-foreground text-xs",
-      className,
-    )}
+  <Heading
+    as="h3"
+    mb="2"
+    px="3"
+    fontWeight="medium"
+    color="fg.muted"
+    fontSize="xs"
+    className={className}
     {...props}
   />
 );
@@ -1367,7 +1402,7 @@ export const PromptInputTabBody = ({
   className,
   ...props
 }: PromptInputTabBodyProps) => (
-  <div className={cn("space-y-1", className)} {...props} />
+  <div className={cx("space-y-1", className)} {...props} />
 );
 
 export type PromptInputTabItemProps = HTMLAttributes<HTMLDivElement>;
@@ -1376,11 +1411,16 @@ export const PromptInputTabItem = ({
   className,
   ...props
 }: PromptInputTabItemProps) => (
-  <div
-    className={cn(
-      "flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent",
-      className,
-    )}
+  <Flex
+    alignItems="center"
+    gap="2"
+    px="3"
+    py="2"
+    fontSize="xs"
+    _hover={{
+      backgroundColor: "AccentColor",
+    }}
+    className={className}
     {...props}
   />
 );
@@ -1390,7 +1430,7 @@ export type PromptInputCommandProps = ComponentProps<typeof Command>;
 export const PromptInputCommand = ({
   className,
   ...props
-}: PromptInputCommandProps) => <Command className={cn(className)} {...props} />;
+}: PromptInputCommandProps) => <Command className={cx(className)} {...props} />;
 
 export type PromptInputCommandInputProps = ComponentProps<typeof CommandInput>;
 
@@ -1398,7 +1438,7 @@ export const PromptInputCommandInput = ({
   className,
   ...props
 }: PromptInputCommandInputProps) => (
-  <CommandInput className={cn(className)} {...props} />
+  <CommandInput className={cx(className)} {...props} />
 );
 
 export type PromptInputCommandListProps = ComponentProps<typeof CommandList>;
@@ -1407,7 +1447,7 @@ export const PromptInputCommandList = ({
   className,
   ...props
 }: PromptInputCommandListProps) => (
-  <CommandList className={cn(className)} {...props} />
+  <CommandList className={cx(className)} {...props} />
 );
 
 export type PromptInputCommandEmptyProps = ComponentProps<typeof CommandEmpty>;
@@ -1416,7 +1456,7 @@ export const PromptInputCommandEmpty = ({
   className,
   ...props
 }: PromptInputCommandEmptyProps) => (
-  <CommandEmpty className={cn(className)} {...props} />
+  <CommandEmpty className={cx(className)} {...props} />
 );
 
 export type PromptInputCommandGroupProps = ComponentProps<typeof CommandGroup>;
@@ -1425,7 +1465,7 @@ export const PromptInputCommandGroup = ({
   className,
   ...props
 }: PromptInputCommandGroupProps) => (
-  <CommandGroup className={cn(className)} {...props} />
+  <CommandGroup className={cx(className)} {...props} />
 );
 
 export type PromptInputCommandItemProps = ComponentProps<typeof CommandItem>;
@@ -1434,7 +1474,7 @@ export const PromptInputCommandItem = ({
   className,
   ...props
 }: PromptInputCommandItemProps) => (
-  <CommandItem className={cn(className)} {...props} />
+  <CommandItem className={cx(className)} {...props} />
 );
 
 export type PromptInputCommandSeparatorProps = ComponentProps<
@@ -1445,5 +1485,5 @@ export const PromptInputCommandSeparator = ({
   className,
   ...props
 }: PromptInputCommandSeparatorProps) => (
-  <CommandSeparator className={cn(className)} {...props} />
+  <CommandSeparator className={cx(className)} {...props} />
 );
