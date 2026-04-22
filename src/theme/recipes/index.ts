@@ -1,3 +1,37 @@
+import { toggleGroup } from "./toggle-group";
+import { toast } from "./toast";
+import { text } from "./text";
+import { tagsInput } from "./tags-input";
+import { table } from "./table";
+import { splitter } from "./splitter";
+import { slider } from "./slider";
+import { skeleton } from "./skeleton";
+import { segmentGroup } from "./segment-group";
+import { ratingGroup } from "./rating-group";
+import { radioGroup } from "./radio-group";
+import { radioCardGroup } from "./radio-card-group";
+import { pinInput } from "./pin-input";
+import { pagination } from "./pagination";
+import { numberInput } from "./number-input";
+import { menu } from "./menu";
+import { link } from "./link";
+import { kbd } from "./kbd";
+import { inputAddon } from "./input-addon";
+import { icon } from "./icon";
+import { hoverCard } from "./hover-card";
+import { heading } from "./heading";
+import { fileUpload } from "./file-upload";
+import { fieldset } from "./fieldset";
+import { field } from "./field";
+import { editable } from "./editable";
+import { drawer } from "./drawer";
+import { datePicker } from "./date-picker";
+import { combobox } from "./combobox";
+import { colorPicker } from "./color-picker";
+import { code } from "./code";
+import { clipboard } from "./clipboard";
+import { checkbox } from "./checkbox";
+import { breadcrumb } from "./breadcrumb";
 import { accordion } from "./accordion";
 import { select } from "./select";
 import { scrollArea } from "./scroll-area";
@@ -45,5 +79,39 @@ export const recipes = {
   select,
   accordion,
   command,
+  breadcrumb,
+  checkbox,
+  clipboard,
+  code,
+  colorPicker,
+  combobox,
+  datePicker,
+  drawer,
+  editable,
+  field,
+  fieldset,
+  fileUpload,
+  heading,
+  hoverCard,
+  icon,
+  inputAddon,
+  kbd,
+  link,
+  menu,
+  numberInput,
+  pagination,
+  pinInput,
+  radioCardGroup,
+  radioGroup,
+  ratingGroup,
+  segmentGroup,
+  skeleton,
+  slider,
+  splitter,
+  table,
+  tagsInput,
+  text,
+  toast,
+  toggleGroup
 }
 export const slotRecipes = {}

@@ -1,35 +1,18 @@
-import * as React from "react"
+'use client'
 import { HoverCard } from '@ark-ui/react/hover-card'
+import type { ComponentProps } from 'react'
+import { createStyleContext } from 'styled-system/jsx'
+import { hoverCard } from 'styled-system/recipes'
 
-const HoverCardRoot = (props: any) => {
-  return <HoverCard.Root data-slot="hover-card" {...props} />
-}
+const { withRootProvider, withContext } = createStyleContext(hoverCard)
 
-const HoverCardTrigger = (props: any) => {
-  return (
-    <HoverCard.Trigger data-slot="hover-card-trigger" {...props} />
-  )
-}
+export type RootProps = ComponentProps<typeof Root>
+export const Root = withRootProvider(HoverCard.Root)
+export const RootProvider = withRootProvider(HoverCard.RootProvider)
+export const Arrow = withContext(HoverCard.Arrow, 'arrow')
+export const ArrowTip = withContext(HoverCard.ArrowTip, 'arrowTip')
+export const Content = withContext(HoverCard.Content, 'content')
+export const Positioner = withContext(HoverCard.Positioner, 'positioner')
+export const Trigger = withContext(HoverCard.Trigger, 'trigger')
 
-const HoverCardContent = React.forwardRef(({ 
-  className,
-  align = "center",
-  sideOffset = 4,
-  ...props
-}: any, ref: any) => {
-  return (
-    <HoverCard.Portal data-slot="hover-card-portal">
-      <HoverCard.Content
-        data-slot="hover-card-content"
-        align={align}
-        sideOffset={sideOffset}
-        className={className}
-        ref={ref}
-        {...props}
-      />
-    </HoverCard.Portal>
-  )
-})
-
-// Re-export the components
-export { HoverCardRoot as HoverCard, HoverCardTrigger, HoverCardContent }
+export { HoverCardContext as Context } from '@ark-ui/react/hover-card'
