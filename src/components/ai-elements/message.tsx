@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group";
 import { Tooltip } from "@/components/ui/tooltip";
-import { css } from "styled-system/css";
 import { cjk } from "@streamdown/cjk";
 import { code } from "@streamdown/code";
 import { math } from "@streamdown/math";
@@ -21,6 +20,8 @@ import {
   useState,
 } from "react";
 import { Streamdown } from "streamdown";
+import { Box } from "styled-system/jsx";
+import { css, cx } from "styled-system/css";
 import { cn } from "@/lib/utils";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
@@ -56,7 +57,8 @@ export const MessageContent = ({
   className,
   ...props
 }: MessageContentProps) => (
-  <div
+  <Box
+    color="fg.default"
     className={css(
       {
         display: "flex",
@@ -86,7 +88,7 @@ export const MessageContent = ({
     {...props}
   >
     {children}
-  </div>
+  </Box>
 );
 
 export type MessageActionsProps = ComponentProps<"div">;
@@ -520,8 +522,13 @@ const streamdownPlugins = { cjk, code, math, mermaid };
 export const MessageResponse = memo(
   ({ className, ...props }: MessageResponseProps) => (
     <Streamdown
-      className={cn(
-        "size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
+      className={cx(
+        css({
+          w: "full",
+          h: "full",
+          "& > :first-of-type": { mt: "0" },
+          "& > :last-of-type": { mb: "0" },
+        }),
         className,
       )}
       plugins={streamdownPlugins}

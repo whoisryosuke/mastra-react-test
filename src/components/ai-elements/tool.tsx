@@ -16,6 +16,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { isValidElement } from "react";
 
 import { CodeBlock } from "./code-block";
+import { Heading } from "../ui";
 
 export type ToolProps = ComponentProps<typeof Collapsible.Root>;
 
@@ -195,17 +196,18 @@ export const ToolInput = ({ className, input, ...props }: ToolInputProps) => (
     )}
     {...props}
   >
-    <h4
+    <Heading
+      as="h4"
+      color="gray.12"
       className={css({
         fontWeight: "medium",
-        color: "muted.foreground",
         fontSize: "xs",
         textTransform: "uppercase",
         letterSpacing: "wide",
       })}
     >
       Parameters
-    </h4>
+    </Heading>
     <div
       className={css({ borderRadius: "md", backgroundColor: "muted / 0.5" })}
     >
@@ -247,17 +249,16 @@ export const ToolOutput = ({
       )}
       {...props}
     >
-      <h4
+      <Heading
         className={css({
           fontWeight: "medium",
-          color: "muted.foreground",
           fontSize: "xs",
           textTransform: "uppercase",
           letterSpacing: "wide",
         })}
       >
         {errorText ? "Error" : "Result"}
-      </h4>
+      </Heading>
       <div
         className={css(
           {
@@ -267,7 +268,7 @@ export const ToolOutput = ({
           },
           errorText
             ? { backgroundColor: "destructive / 0.1", color: "destructive" }
-            : { backgroundColor: "muted / 0.5", color: "foreground" },
+            : { backgroundColor: "muted / 0.5", color: "gray.12" },
         )}
       >
         {errorText && <div>{errorText}</div>}
