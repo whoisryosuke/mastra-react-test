@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DefaultChatTransport, type ToolUIPart } from "ai";
 import { useChat } from "@ai-sdk/react";
-import { css } from "styled-system/css";
+import { css, cx } from "styled-system/css";
 
 import {
   PromptInput,
@@ -28,6 +28,8 @@ import {
   ToolInput,
   ToolOutput,
 } from "@/components/ai-elements/tool";
+import { Box } from "styled-system/jsx";
+import DebugPanel from "./components/debug/DebugPanel";
 
 const appContainer = css({
   position: "relative",
@@ -73,63 +75,69 @@ export default function App() {
   };
 
   return (
-    <div className={appContainer}>
-      <div className={conversationContainer}>
-        <Conversation className={css({ height: "full" })}>
-          <ConversationContent>
-            {messages.map((message) => (
-              <div key={message.id}>
-                {message.parts?.map((part, i) => {
-                  if (part.type === "text") {
-                    return (
-                      <Message key={`${message.id}-${i}`} from={message.role}>
-                        <MessageContent>
-                          <MessageResponse>{part.text}</MessageResponse>
-                        </MessageContent>
-                      </Message>
-                    );
-                  }
+    <>
+      <Box bg="gray.1" className={cx(appContainer)}>
+        <Box className={conversationContainer}>
+          <Conversation className={css({ height: "full" })}>
+            <ConversationContent>
+              {messages.map((message) => (
+                <Box key={message.id}>
+                  {message.parts?.map((part, i) => {
+                    if (part.type === "text") {
+                      return (
+                        <Message key={`${message.id}-${i}`} from={message.role}>
+                          <MessageContent>
+                            <MessageResponse>{part.text}</MessageResponse>
+                          </MessageContent>
+                        </Message>
+                      );
+                    }
 
-                  if (part.type?.startsWith("tool-")) {
-                    return (
-                      <Tool key={`${message.id}-${i}`}>
-                        <ToolHeader
-                          type={(part as ToolUIPart).type}
-                          state={
-                            (part as ToolUIPart).state || "output-available"
-                          }
-                          className={toolHeaderStyles}
-                        />
-                        <ToolContent>
-                          <ToolInput input={(part as ToolUIPart).input || {}} />
-                          <ToolOutput
-                            output={(part as ToolUIPart).output}
-                            errorText={(part as ToolUIPart).errorText}
+                    if (part.type?.startsWith("tool-")) {
+                      return (
+                        <Tool key={`${message.id}-${i}`}>
+                          <ToolHeader
+                            type={(part as ToolUIPart).type}
+                            state={
+                              (part as ToolUIPart).state || "output-available"
+                            }
+                            className={toolHeaderStyles}
                           />
-                        </ToolContent>
-                      </Tool>
-                    );
-                  }
+                          <ToolContent>
+                            <ToolInput
+                              input={(part as ToolUIPart).input || {}}
+                            />
+                            <ToolOutput
+                              output={(part as ToolUIPart).output}
+                              errorText={(part as ToolUIPart).errorText}
+                            />
+                          </ToolContent>
+                        </Tool>
+                      );
+                    }
 
-                  return null;
-                })}
-              </div>
-            ))}
-            <ConversationScrollButton />
-          </ConversationContent>
-        </Conversation>
-        <PromptInput onSubmit={handleSubmit} className={promptInputStyles}>
-          <PromptInputBody>
-            <PromptInputTextarea
-              onChange={(e) => setInput(e.target.value)}
-              className={textareaStyles}
-              value={input}
-              placeholder="Ask about the weather..."
-              disabled={status !== "ready"}
-            />
-          </PromptInputBody>
-        </PromptInput>
-      </div>
-    </div>
+                    return null;
+                  })}
+                </Box>
+              ))}
+              <ConversationScrollButton />
+            </ConversationContent>
+          </Conversation>
+          <PromptInput onSubmit={handleSubmit} className={promptInputStyles}>
+            <PromptInputBody>
+              <PromptInputTextarea
+                onChange={(e) => setInput(e.target.value)}
+                className={textareaStyles}
+                value={input}
+                placeholder="Ask about the weather..."
+                disabled={status !== "ready"}
+              />
+            </PromptInputBody>
+          </PromptInput>
+        </Box>
+      </Box>
+
+      <DebugPanel />
+    </>
   );
 }
