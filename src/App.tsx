@@ -1,6 +1,7 @@
 import * as React from "react";
 import { DefaultChatTransport, type ToolUIPart } from "ai";
 import { useChat } from "@ai-sdk/react";
+import { css } from "styled-system/css";
 
 import {
   PromptInput,
@@ -28,6 +29,33 @@ import {
   ToolOutput,
 } from "@/components/ai-elements/tool";
 
+const appContainer = css({
+  position: "relative",
+  marginX: "auto",
+  width: "full",
+  height: "screen",
+  maxWidth: "4xl",
+  padding: "6",
+});
+
+const conversationContainer = css({
+  display: "flex",
+  flexDirection: "column",
+  height: "full",
+});
+
+const toolHeaderStyles = css({
+  cursor: "pointer",
+});
+
+const promptInputStyles = css({
+  marginTop: "20",
+});
+
+const textareaStyles = css({
+  lineHeight: { base: "normal", md: "10" },
+});
+
 export default function App() {
   const [input, setInput] = React.useState<string>("");
 
@@ -45,9 +73,9 @@ export default function App() {
   };
 
   return (
-    <div className="relative mx-auto size-full h-screen max-w-4xl p-6">
-      <div className="flex h-full flex-col">
-        <Conversation className="h-full">
+    <div className={appContainer}>
+      <div className={conversationContainer}>
+        <Conversation className={css({ height: "full" })}>
           <ConversationContent>
             {messages.map((message) => (
               <div key={message.id}>
@@ -70,7 +98,7 @@ export default function App() {
                           state={
                             (part as ToolUIPart).state || "output-available"
                           }
-                          className="cursor-pointer"
+                          className={toolHeaderStyles}
                         />
                         <ToolContent>
                           <ToolInput input={(part as ToolUIPart).input || {}} />
@@ -90,11 +118,11 @@ export default function App() {
             <ConversationScrollButton />
           </ConversationContent>
         </Conversation>
-        <PromptInput onSubmit={handleSubmit} className="mt-20">
+        <PromptInput onSubmit={handleSubmit} className={promptInputStyles}>
           <PromptInputBody>
             <PromptInputTextarea
               onChange={(e) => setInput(e.target.value)}
-              className="md:leading-10"
+              className={textareaStyles}
               value={input}
               placeholder="Ask about the weather..."
               disabled={status !== "ready"}
