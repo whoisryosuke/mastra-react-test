@@ -2,12 +2,8 @@
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -189,15 +185,23 @@ export const StackTrace = memo(
         setIsOpen,
         trace: parsedTrace,
       }),
-      [parsedTrace, trace, isOpen, setIsOpen, onFilePathClick]
+      [parsedTrace, trace, isOpen, setIsOpen, onFilePathClick],
     );
 
     return (
       <StackTraceContext.Provider value={contextValue}>
         <div
-          className={cn(
-            "not-prose w-full overflow-hidden rounded-lg border bg-background font-mono text-sm",
-            className
+          className={css(
+            {
+              width: "full",
+              overflow: "hidden",
+              borderRadius: "lg",
+              borderWidth: "1px",
+              backgroundColor: "background",
+              fontFamily: "mono",
+              fontSize: "sm",
+            },
+            className,
           )}
           {...props}
         >
@@ -205,30 +209,46 @@ export const StackTrace = memo(
         </div>
       </StackTraceContext.Provider>
     );
-  }
+  },
 );
 
-export type StackTraceHeaderProps = ComponentProps<typeof CollapsibleTrigger>;
+export type StackTraceHeaderProps = ComponentProps<typeof Collapsible.Trigger>;
 
 export const StackTraceHeader = memo(
   ({ className, children, ...props }: StackTraceHeaderProps) => {
     const { isOpen, setIsOpen } = useStackTrace();
 
     return (
-      <Collapsible onOpenChange={setIsOpen} open={isOpen}>
-        <CollapsibleTrigger asChild {...props}>
+      <Collapsible.Root
+        onOpenChange={(details) => setIsOpen(details.open)}
+        open={isOpen}
+      >
+        <Collapsible.Trigger asChild {...props}>
           <div
-            className={cn(
-              "flex w-full cursor-pointer items-center gap-3 p-3 text-left transition-colors hover:bg-muted/50",
-              className
+            className={css(
+              {
+                display: "flex",
+                width: "full",
+                cursor: "pointer",
+                alignItems: "center",
+                gap: "3",
+                padding: "3",
+                textAlign: "left",
+                transitionProperty: "colors",
+                transitionDuration: "200ms",
+                _hover: {
+                  backgroundColor: "muted / 0.5",
+                },
+              },
+              className,
             )}
           >
             {children}
           </div>
-        </CollapsibleTrigger>
-      </Collapsible>
+        </Collapsible.Trigger>
+      </Collapsible.Root>
     );
-  }
+  },
 );
 
 export type StackTraceErrorProps = ComponentProps<"div">;
@@ -236,16 +256,29 @@ export type StackTraceErrorProps = ComponentProps<"div">;
 export const StackTraceError = memo(
   ({ className, children, ...props }: StackTraceErrorProps) => (
     <div
-      className={cn(
-        "flex flex-1 items-center gap-2 overflow-hidden",
-        className
+      className={css(
+        {
+          display: "flex",
+          flex: "1",
+          alignItems: "center",
+          gap: "2",
+          overflow: "hidden",
+        },
+        className,
       )}
       {...props}
     >
-      <AlertTriangleIcon className="size-4 shrink-0 text-destructive" />
+      <AlertTriangleIcon
+        className={css({
+          width: "4",
+          height: "4",
+          flexShrink: "0",
+          color: "destructive",
+        })}
+      />
       {children}
     </div>
-  )
+  ),
 );
 
 export type StackTraceErrorTypeProps = ComponentProps<"span">;
@@ -256,13 +289,20 @@ export const StackTraceErrorType = memo(
 
     return (
       <span
-        className={cn("shrink-0 font-semibold text-destructive", className)}
+        className={css(
+          {
+            flexShrink: "0",
+            fontWeight: "semibold",
+            color: "destructive",
+          },
+          className,
+        )}
         {...props}
       >
         {children ?? trace.errorType}
       </span>
     );
-  }
+  },
 );
 
 export type StackTraceErrorMessageProps = ComponentProps<"span">;
@@ -272,11 +312,22 @@ export const StackTraceErrorMessage = memo(
     const { trace } = useStackTrace();
 
     return (
-      <span className={cn("truncate text-foreground", className)} {...props}>
+      <span
+        className={css(
+          {
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "foreground",
+          },
+          className,
+        )}
+        {...props}
+      >
         {children ?? trace.errorMessage}
       </span>
     );
-  }
+  },
 );
 
 export type StackTraceActionsProps = ComponentProps<"div">;
@@ -291,7 +342,15 @@ const handleActionsKeyDown = (e: React.KeyboardEvent) => {
 export const StackTraceActions = memo(
   ({ className, children, ...props }: StackTraceActionsProps) => (
     <div
-      className={cn("flex shrink-0 items-center gap-1", className)}
+      className={css(
+        {
+          display: "flex",
+          flexShrink: "0",
+          alignItems: "center",
+          gap: "1",
+        },
+        className,
+      )}
       onClick={handleActionsClick}
       onKeyDown={handleActionsKeyDown}
       role="group"
@@ -299,7 +358,7 @@ export const StackTraceActions = memo(
     >
       {children}
     </div>
-  )
+  ),
 );
 
 export type StackTraceCopyButtonProps = ComponentProps<typeof Button> & {
@@ -333,7 +392,7 @@ export const StackTraceCopyButton = memo(
         onCopy?.();
         timeoutRef.current = window.setTimeout(
           () => setIsCopied(false),
-          timeout
+          timeout,
         );
       } catch (error) {
         onError?.(error as Error);
@@ -344,23 +403,23 @@ export const StackTraceCopyButton = memo(
       () => () => {
         window.clearTimeout(timeoutRef.current);
       },
-      []
+      [],
     );
 
     const Icon = isCopied ? CheckIcon : CopyIcon;
 
     return (
       <Button
-        className={cn("size-7", className)}
+        className={css({ width: "7", height: "7" }, className)}
         onClick={copyToClipboard}
-        size="icon"
-        variant="ghost"
+        size="xs"
+        variant="plain"
         {...props}
       >
         {children ?? <Icon size={14} />}
       </Button>
     );
-  }
+  },
 );
 
 export type StackTraceExpandButtonProps = ComponentProps<"div">;
@@ -371,22 +430,35 @@ export const StackTraceExpandButton = memo(
 
     return (
       <div
-        className={cn("flex size-7 items-center justify-center", className)}
+        className={css(
+          {
+            display: "flex",
+            width: "7",
+            height: "7",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          className,
+        )}
         {...props}
       >
         <ChevronDownIcon
-          className={cn(
-            "size-4 text-muted-foreground transition-transform",
-            isOpen ? "rotate-180" : "rotate-0"
-          )}
+          className={css({
+            width: "4",
+            height: "4",
+            color: "muted.foreground",
+            transitionProperty: "transform",
+            transitionDuration: "200ms",
+            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+          })}
         />
       </div>
     );
-  }
+  },
 );
 
 export type StackTraceContentProps = ComponentProps<
-  typeof CollapsibleContent
+  typeof Collapsible.Content
 > & {
   maxHeight?: number;
 };
@@ -401,33 +473,32 @@ export const StackTraceContent = memo(
     const { isOpen } = useStackTrace();
 
     return (
-      <Collapsible open={isOpen}>
-        <CollapsibleContent
-          className={cn(
-            "overflow-auto border-t bg-muted/30",
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in",
-            className
+      <Collapsible.Root open={isOpen}>
+        <Collapsible.Content
+          className={css(
+            {
+              overflow: "auto",
+              borderTopWidth: "1px",
+              backgroundColor: "muted / 0.3",
+            },
+            className,
           )}
           style={{ maxHeight }}
           {...props}
         >
           {children}
-        </CollapsibleContent>
-      </Collapsible>
+        </Collapsible.Content>
+      </Collapsible.Root>
     );
-  }
+  },
 );
-
-export type StackTraceFramesProps = ComponentProps<"div"> & {
-  showInternalFrames?: boolean;
-};
 
 interface FilePathButtonProps {
   frame: StackFrame;
   onFilePathClick?: (
     filePath: string,
     lineNumber?: number,
-    columnNumber?: number
+    columnNumber?: number,
   ) => void;
 }
 
@@ -438,16 +509,22 @@ const FilePathButton = memo(
         onFilePathClick?.(
           frame.filePath,
           frame.lineNumber ?? undefined,
-          frame.columnNumber ?? undefined
+          frame.columnNumber ?? undefined,
         );
       }
     }, [frame, onFilePathClick]);
 
     return (
       <button
-        className={cn(
-          "underline decoration-dotted hover:text-primary",
-          onFilePathClick && "cursor-pointer"
+        className={css(
+          {
+            textDecoration: "underline",
+            textDecorationStyle: "dotted",
+            _hover: {
+              color: "primary",
+            },
+          },
+          onFilePathClick && { cursor: "pointer" },
         )}
         disabled={!onFilePathClick}
         onClick={handleClick}
@@ -458,10 +535,14 @@ const FilePathButton = memo(
         {frame.columnNumber !== null && `:${frame.columnNumber}`}
       </button>
     );
-  }
+  },
 );
 
 FilePathButton.displayName = "FilePathButton";
+
+export type StackTraceFramesProps = ComponentProps<"div"> & {
+  showInternalFrames?: boolean;
+};
 
 export const StackTraceFrames = memo(
   ({
@@ -476,31 +557,43 @@ export const StackTraceFrames = memo(
       : trace.frames.filter((f) => !f.isInternal);
 
     return (
-      <div className={cn("space-y-1 p-3", className)} {...props}>
+      <div
+        className={css(
+          { display: "flex", flexDirection: "column", gap: "1", padding: "3" },
+          className,
+        )}
+        {...props}
+      >
         {framesToShow.map((frame) => (
           <div
-            className={cn(
-              "text-xs",
+            className={css(
+              {
+                fontSize: "xs",
+              },
               frame.isInternal
-                ? "text-muted-foreground/50"
-                : "text-foreground/90"
+                ? { color: "muted.foreground / 0.5" }
+                : { color: "foreground / 0.9" },
             )}
             key={frame.raw}
           >
-            <span className="text-muted-foreground">at </span>
+            <span className={css({ color: "muted.foreground" })}>at </span>
             {frame.functionName && (
-              <span className={frame.isInternal ? "" : "text-foreground"}>
+              <span
+                className={
+                  frame.isInternal ? css({}) : css({ color: "foreground" })
+                }
+              >
                 {frame.functionName}{" "}
               </span>
             )}
             {frame.filePath && (
               <>
-                <span className="text-muted-foreground">(</span>
+                <span className={css({ color: "muted.foreground" })}>(</span>
                 <FilePathButton
                   frame={frame}
                   onFilePathClick={onFilePathClick}
                 />
-                <span className="text-muted-foreground">)</span>
+                <span className={css({ color: "muted.foreground" })}>)</span>
               </>
             )}
             {!(frame.filePath || frame.functionName) && (
@@ -509,11 +602,13 @@ export const StackTraceFrames = memo(
           </div>
         ))}
         {framesToShow.length === 0 && (
-          <div className="text-muted-foreground text-xs">No stack frames</div>
+          <div className={css({ color: "muted.foreground", fontSize: "xs" })}>
+            No stack frames
+          </div>
         )}
       </div>
     );
-  }
+  },
 );
 
 StackTrace.displayName = "StackTrace";

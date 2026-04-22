@@ -9,11 +9,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import * as Popover from "@/components/ui/popover";
+import { css } from "styled-system/css";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDownIcon } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
@@ -62,7 +59,7 @@ export const useAudioDevices = () => {
 
       const deviceList = await navigator.mediaDevices.enumerateDevices();
       const audioInputs = deviceList.filter(
-        (device) => device.kind === "audioinput"
+        (device) => device.kind === "audioinput",
       );
 
       setDevices(audioInputs);
@@ -98,7 +95,7 @@ export const useAudioDevices = () => {
 
       const deviceList = await navigator.mediaDevices.enumerateDevices();
       const audioInputs = deviceList.filter(
-        (device) => device.kind === "audioinput"
+        (device) => device.kind === "audioinput",
       );
 
       setDevices(audioInputs);
@@ -134,7 +131,7 @@ export const useAudioDevices = () => {
     return () => {
       navigator.mediaDevices.removeEventListener(
         "devicechange",
-        handleDeviceChange
+        handleDeviceChange,
       );
     };
   }, [hasPermission, loadDevicesWithPermission, loadDevicesWithoutPermission]);
@@ -194,7 +191,7 @@ export const MicSelector = ({
       value,
       width,
     }),
-    [devices, onOpenChange, onValueChange, open, setWidth, value, width]
+    [devices, onOpenChange, onValueChange, open, setWidth, value, width],
   );
 
   return (
@@ -312,7 +309,7 @@ export const MicSelectorItem = (props: MicSelectorItemProps) => {
       onValueChange?.(currentValue);
       onOpenChange?.(false);
     },
-    [onValueChange, onOpenChange]
+    [onValueChange, onOpenChange],
   );
 
   return <CommandItem onSelect={handleSelect} {...props} />;

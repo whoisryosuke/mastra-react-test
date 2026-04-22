@@ -6,7 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import type { FileUIPart, SourceDocumentUIPart } from "ai";
 import {
   FileTextIcon,
@@ -52,7 +52,7 @@ const mediaCategoryIcons: Record<AttachmentMediaCategory, typeof ImageIcon> = {
 // ============================================================================
 
 export const getMediaCategory = (
-  data: AttachmentData
+  data: AttachmentData,
 ): AttachmentMediaCategory => {
   if (data.type === "source-document") {
     return "source";
@@ -88,12 +88,16 @@ export const getAttachmentLabel = (data: AttachmentData): string => {
 const renderAttachmentImage = (
   url: string,
   filename: string | undefined,
-  isGrid: boolean
+  isGrid: boolean,
 ) =>
   isGrid ? (
     <img
       alt={filename || "Image"}
-      className="size-full object-cover"
+      className={css({
+        width: "full",
+        height: "full",
+        objectFit: "cover",
+      })}
       height={96}
       src={url}
       width={96}
@@ -101,7 +105,12 @@ const renderAttachmentImage = (
   ) : (
     <img
       alt={filename || "Image"}
-      className="size-full rounded object-cover"
+      className={css({
+        width: "full",
+        height: "full",
+        borderRadius: "l2",
+        objectFit: "cover",
+      })}
       height={20}
       src={url}
       width={20}
@@ -161,11 +170,26 @@ export const Attachments = ({
   return (
     <AttachmentsContext.Provider value={contextValue}>
       <div
-        className={cn(
-          "flex items-start",
-          variant === "list" ? "flex-col gap-2" : "flex-wrap gap-2",
-          variant === "grid" && "ml-auto w-fit",
-          className
+        className={css(
+          {
+            display: "flex",
+            alignItems: "flex-start",
+          },
+          variant === "list"
+            ? css({
+                flexDirection: "column",
+                gap: "2",
+              })
+            : css({
+                flexWrap: "wrap",
+                gap: "2",
+              }),
+          variant === "grid" &&
+            css({
+              marginLeft: "auto",
+              width: "fit",
+            }),
+          className,
         )}
         {...props}
       >
@@ -196,26 +220,60 @@ export const Attachment = ({
 
   const contextValue = useMemo<AttachmentContextValue>(
     () => ({ data, mediaCategory, onRemove, variant }),
-    [data, mediaCategory, onRemove, variant]
+    [data, mediaCategory, onRemove, variant],
   );
 
   return (
     <AttachmentContext.Provider value={contextValue}>
       <div
-        className={cn(
-          "group relative",
-          variant === "grid" && "size-24 overflow-hidden rounded-lg",
-          variant === "inline" && [
-            "flex h-8 cursor-pointer select-none items-center gap-1.5",
-            "rounded-md border border-border px-1.5",
-            "font-medium text-sm transition-all",
-            "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-          ],
-          variant === "list" && [
-            "flex w-full items-center gap-3 rounded-lg border p-3",
-            "hover:bg-accent/50",
-          ],
-          className
+        className={css(
+          {
+            position: "relative",
+          },
+          variant === "grid" &&
+            css({
+              width: "6rem",
+              height: "6rem",
+              overflow: "hidden",
+              borderRadius: "l2",
+            }),
+          variant === "inline" &&
+            css({
+              display: "flex",
+              height: "2rem",
+              cursor: "pointer",
+              userSelect: "none",
+              alignItems: "center",
+              gap: "1.5",
+              borderRadius: "l2",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "border",
+              paddingX: "1.5",
+              fontWeight: "medium",
+              fontSize: "sm",
+              transition: "all",
+              _hover: {
+                backgroundColor: "bg.subtle",
+                color: "fg.default",
+              },
+            }),
+          variant === "list" &&
+            css({
+              display: "flex",
+              width: "full",
+              alignItems: "center",
+              gap: "3",
+              borderRadius: "l2",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "border",
+              padding: "3",
+              _hover: {
+                backgroundColor: "bg.subtle/50",
+              },
+            }),
+          className,
         )}
         {...props}
       >
@@ -240,10 +298,17 @@ export const AttachmentPreview = ({
 }: AttachmentPreviewProps) => {
   const { data, mediaCategory, variant } = useAttachmentContext();
 
-  const iconSize = variant === "inline" ? "size-3" : "size-4";
-
   const renderIcon = (Icon: typeof ImageIcon) => (
-    <Icon className={cn(iconSize, "text-muted-foreground")} />
+    <Icon
+      className={css(
+        {
+          color: "fg.muted",
+        },
+        variant === "inline"
+          ? css({ width: "3", height: "3" })
+          : css({ width: "4", height: "4" }),
+      )}
+    />
   );
 
   const renderContent = () => {
@@ -252,7 +317,17 @@ export const AttachmentPreview = ({
     }
 
     if (mediaCategory === "video" && data.type === "file" && data.url) {
-      return <video className="size-full object-cover" muted src={data.url} />;
+      return (
+        <video
+          className={css({
+            width: "full",
+            height: "full",
+            objectFit: "cover",
+          })}
+          muted
+          src={data.url}
+        />
+      );
     }
 
     const Icon = mediaCategoryIcons[mediaCategory];
@@ -261,12 +336,35 @@ export const AttachmentPreview = ({
 
   return (
     <div
-      className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden",
-        variant === "grid" && "size-full bg-muted",
-        variant === "inline" && "size-5 rounded bg-background",
-        variant === "list" && "size-12 rounded bg-muted",
-        className
+      className={css(
+        {
+          flexShrink: "0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        },
+        variant === "grid" &&
+          css({
+            width: "full",
+            height: "full",
+            backgroundColor: "bg.subtle",
+          }),
+        variant === "inline" &&
+          css({
+            width: "5",
+            height: "5",
+            borderRadius: "l2",
+            backgroundColor: "bg.default",
+          }),
+        variant === "list" &&
+          css({
+            width: "3rem",
+            height: "3rem",
+            borderRadius: "l2",
+            backgroundColor: "bg.subtle",
+          }),
+        className,
       )}
       {...props}
     >
@@ -296,10 +394,37 @@ export const AttachmentInfo = ({
   }
 
   return (
-    <div className={cn("min-w-0 flex-1", className)} {...props}>
-      <span className="block truncate">{label}</span>
+    <div
+      className={css(
+        {
+          minWidth: "0",
+          flex: "1",
+        },
+        className,
+      )}
+      {...props}
+    >
+      <span
+        className={css({
+          display: "block",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        })}
+      >
+        {label}
+      </span>
       {showMediaType && data.mediaType && (
-        <span className="block truncate text-muted-foreground text-xs">
+        <span
+          className={css({
+            display: "block",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "fg.muted",
+            fontSize: "xs",
+          })}
+        >
           {data.mediaType}
         </span>
       )}
@@ -328,7 +453,7 @@ export const AttachmentRemove = ({
       e.stopPropagation();
       onRemove?.();
     },
-    [onRemove]
+    [onRemove],
   );
 
   if (!onRemove) {
@@ -338,29 +463,57 @@ export const AttachmentRemove = ({
   return (
     <Button
       aria-label={label}
-      className={cn(
-        variant === "grid" && [
-          "absolute top-2 right-2 size-6 rounded-full p-0",
-          "bg-background/80 backdrop-blur-sm",
-          "opacity-0 transition-opacity group-hover:opacity-100",
-          "hover:bg-background",
-          "[&>svg]:size-3",
-        ],
-        variant === "inline" && [
-          "size-5 rounded p-0",
-          "opacity-0 transition-opacity group-hover:opacity-100",
-          "[&>svg]:size-2.5",
-        ],
-        variant === "list" && ["size-8 shrink-0 rounded p-0", "[&>svg]:size-4"],
-        className
+      className={css(
+        {},
+        variant === "grid" &&
+          css({
+            position: "absolute",
+            top: "2",
+            right: "2",
+            width: "6",
+            height: "6",
+            borderRadius: "full",
+            padding: "0",
+            backgroundColor: "bg.default/80",
+            backdropFilter: "blur(4px)",
+            opacity: "0",
+            transition: "opacity",
+            _groupHover: {
+              opacity: "100",
+            },
+            _hover: {
+              backgroundColor: "bg.default",
+            },
+          }),
+        variant === "inline" &&
+          css({
+            width: "5",
+            height: "5",
+            padding: "0",
+            borderRadius: "l2",
+            opacity: "0",
+            transition: "opacity",
+            _groupHover: {
+              opacity: "100",
+            },
+          }),
+        variant === "list" &&
+          css({
+            width: "8",
+            height: "8",
+            flexShrink: "0",
+            padding: "0",
+            borderRadius: "l2",
+          }),
+        className,
       )}
       onClick={handleClick}
       type="button"
-      variant="ghost"
+      variant="plain"
       {...props}
     >
-      {children ?? <XIcon />}
-      <span className="sr-only">{label}</span>
+      {children ?? <XIcon className={css({ width: "3", height: "3" })} />}
+      <span className={css({ srOnly: true })}>{label}</span>
     </Button>
   );
 };
@@ -384,7 +537,7 @@ export type AttachmentHoverCardTriggerProps = ComponentProps<
 >;
 
 export const AttachmentHoverCardTrigger = (
-  props: AttachmentHoverCardTriggerProps
+  props: AttachmentHoverCardTriggerProps,
 ) => <HoverCardTrigger {...props} />;
 
 export type AttachmentHoverCardContentProps = ComponentProps<
@@ -398,7 +551,13 @@ export const AttachmentHoverCardContent = ({
 }: AttachmentHoverCardContentProps) => (
   <HoverCardContent
     align={align}
-    className={cn("w-auto p-2", className)}
+    className={css(
+      {
+        width: "auto",
+        padding: "2",
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -415,9 +574,16 @@ export const AttachmentEmpty = ({
   ...props
 }: AttachmentEmptyProps) => (
   <div
-    className={cn(
-      "flex items-center justify-center p-4 text-muted-foreground text-sm",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "4",
+        color: "fg.muted",
+        fontSize: "sm",
+      },
+      className,
     )}
     {...props}
   >

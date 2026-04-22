@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import * as Alert from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import type { ToolUIPart } from "ai";
 import type { ComponentProps, ReactNode } from "react";
 import { createContext, useContext, useMemo } from "react";
@@ -41,7 +41,7 @@ interface ConfirmationContextValue {
 }
 
 const ConfirmationContext = createContext<ConfirmationContextValue | null>(
-  null
+  null,
 );
 
 const useConfirmation = () => {
@@ -54,7 +54,7 @@ const useConfirmation = () => {
   return context;
 };
 
-export type ConfirmationProps = ComponentProps<typeof Alert> & {
+export type ConfirmationProps = ComponentProps<typeof Alert.Root> & {
   approval?: ToolUIPartApproval;
   state: ToolUIPart["state"];
 };
@@ -73,18 +73,36 @@ export const Confirmation = ({
 
   return (
     <ConfirmationContext.Provider value={contextValue}>
-      <Alert className={cn("flex flex-col gap-2", className)} {...props} />
+      <Alert.Root
+        className={css(
+          {
+            display: "flex",
+            flexDirection: "column",
+            gap: "2",
+          },
+          className,
+        )}
+        {...props}
+      />
     </ConfirmationContext.Provider>
   );
 };
 
-export type ConfirmationTitleProps = ComponentProps<typeof AlertDescription>;
+export type ConfirmationTitleProps = ComponentProps<typeof Alert.Description>;
 
 export const ConfirmationTitle = ({
   className,
   ...props
 }: ConfirmationTitleProps) => (
-  <AlertDescription className={cn("inline", className)} {...props} />
+  <Alert.Description
+    className={css(
+      {
+        display: "inline",
+      },
+      className,
+    )}
+    {...props}
+  />
 );
 
 export interface ConfirmationRequestProps {
@@ -161,7 +179,16 @@ export const ConfirmationActions = ({
 
   return (
     <div
-      className={cn("flex items-center justify-end gap-2 self-end", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: "2",
+          alignSelf: "flex-end",
+        },
+        className,
+      )}
       {...props}
     />
   );
@@ -170,5 +197,13 @@ export const ConfirmationActions = ({
 export type ConfirmationActionProps = ComponentProps<typeof Button>;
 
 export const ConfirmationAction = (props: ConfirmationActionProps) => (
-  <Button className="h-8 px-3 text-sm" type="button" {...props} />
+  <Button
+    className={css({
+      height: "2rem",
+      paddingX: "3",
+      fontSize: "sm",
+    })}
+    type="button"
+    {...props}
+  />
 );

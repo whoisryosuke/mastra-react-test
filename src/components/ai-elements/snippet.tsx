@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-  InputGroupText,
-} from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
+import { InputGroup } from "@/components/ui/input-group";
+import { css } from "styled-system/css";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import {
@@ -42,39 +36,41 @@ export const Snippet = ({
 
   return (
     <SnippetContext.Provider value={contextValue}>
-      <InputGroup className={cn("font-mono", className)} {...props}>
+      <InputGroup className={css({ fontFamily: "mono" }, className)} {...props}>
         {children}
       </InputGroup>
     </SnippetContext.Provider>
   );
 };
 
-export type SnippetAddonProps = ComponentProps<typeof InputGroupAddon>;
+export type SnippetAddonProps = ComponentProps<"div">;
 
-export const SnippetAddon = (props: SnippetAddonProps) => (
-  <InputGroupAddon {...props} />
-);
+export const SnippetAddon = (props: SnippetAddonProps) => <div {...props} />;
 
-export type SnippetTextProps = ComponentProps<typeof InputGroupText>;
+export type SnippetTextProps = ComponentProps<"span">;
 
 export const SnippetText = ({ className, ...props }: SnippetTextProps) => (
-  <InputGroupText
-    className={cn("pl-2 font-normal text-muted-foreground", className)}
+  <span
+    className={css(
+      {
+        paddingLeft: "2",
+        fontWeight: "normal",
+        color: "muted.foreground",
+      },
+      className,
+    )}
     {...props}
   />
 );
 
-export type SnippetInputProps = Omit<
-  ComponentProps<typeof InputGroupInput>,
-  "readOnly" | "value"
->;
+export type SnippetInputProps = ComponentProps<"input">;
 
 export const SnippetInput = ({ className, ...props }: SnippetInputProps) => {
   const { code } = useContext(SnippetContext);
 
   return (
-    <InputGroupInput
-      className={cn("text-foreground", className)}
+    <input
+      className={css({ color: "foreground" }, className)}
       readOnly
       value={code}
       {...props}
@@ -82,7 +78,7 @@ export const SnippetInput = ({ className, ...props }: SnippetInputProps) => {
   );
 };
 
-export type SnippetCopyButtonProps = ComponentProps<typeof InputGroupButton> & {
+export type SnippetCopyButtonProps = ComponentProps<"button"> & {
   onCopy?: () => void;
   onError?: (error: Error) => void;
   timeout?: number;
@@ -113,7 +109,7 @@ export const SnippetCopyButton = ({
         onCopy?.();
         timeoutRef.current = window.setTimeout(
           () => setIsCopied(false),
-          timeout
+          timeout,
         );
       }
     } catch (error) {
@@ -125,21 +121,22 @@ export const SnippetCopyButton = ({
     () => () => {
       window.clearTimeout(timeoutRef.current);
     },
-    []
+    [],
   );
 
   const Icon = isCopied ? CheckIcon : CopyIcon;
 
   return (
-    <InputGroupButton
+    <button
       aria-label="Copy"
       className={className}
       onClick={copyToClipboard}
-      size="icon-sm"
       title="Copy"
       {...props}
     >
-      {children ?? <Icon className="size-3.5" size={14} />}
-    </InputGroupButton>
+      {children ?? (
+        <Icon className={css({ width: "3.5", height: "3.5" })} size={14} />
+      )}
+    </button>
   );
 };

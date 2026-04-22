@@ -1,15 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import * as DropdownMenu from "@/components/ui/dropdown-menu";
+import { css } from "styled-system/css";
 import {
   ChevronDownIcon,
   ExternalLinkIcon,
@@ -53,7 +46,7 @@ const providers = {
         <title>Claude</title>
         <path
           clipRule="evenodd"
-          d="M2.3545 7.9775L4.7145 6.654L4.7545 6.539L4.7145 6.475H4.6L4.205 6.451L2.856 6.4145L1.6865 6.366L0.5535 6.305L0.268 6.2445L0 5.892L0.0275 5.716L0.2675 5.5555L0.6105 5.5855L1.3705 5.637L2.5095 5.716L3.3355 5.7645L4.56 5.892H4.7545L4.782 5.8135L4.715 5.7645L4.6635 5.716L3.4845 4.918L2.2085 4.074L1.5405 3.588L1.1785 3.3425L0.9965 3.1115L0.9175 2.6075L1.2455 2.2465L1.686 2.2765L1.7985 2.307L2.245 2.65L3.199 3.388L4.4445 4.3045L4.627 4.4565L4.6995 4.405L4.709 4.3685L4.627 4.2315L3.9495 3.0085L3.2265 1.7635L2.9045 1.2475L2.8195 0.938C2.78711 0.819128 2.76965 0.696687 2.7675 0.5735L3.1415 0.067L3.348 0L3.846 0.067L4.056 0.249L4.366 0.956L4.867 2.0705L5.6445 3.5855L5.8725 4.0345L5.994 4.4505L6.0395 4.578H6.1185V4.505L6.1825 3.652L6.301 2.6045L6.416 1.257L6.456 0.877L6.644 0.422L7.0175 0.176L7.3095 0.316L7.5495 0.6585L7.516 0.8805L7.373 1.806L7.0935 3.2575L6.9115 4.2285H7.0175L7.139 4.1075L7.6315 3.4545L8.4575 2.4225L8.8225 2.0125L9.2475 1.5605L9.521 1.345H10.0375L10.4175 1.9095L10.2475 2.4925L9.7155 3.166L9.275 3.737L8.643 4.587L8.248 5.267L8.2845 5.322L8.3785 5.312L9.8065 5.009L10.578 4.869L11.4985 4.7115L11.915 4.9055L11.9605 5.103L11.7965 5.5065L10.812 5.7495L9.6575 5.9805L7.938 6.387L7.917 6.402L7.9415 6.4325L8.716 6.5055L9.047 6.5235H9.858L11.368 6.636L11.763 6.897L12 7.216L11.9605 7.4585L11.353 7.7685L10.533 7.574L8.6185 7.119L7.9625 6.9545H7.8715V7.0095L8.418 7.5435L9.421 8.4485L10.6755 9.6135L10.739 9.9025L10.578 10.13L10.408 10.1055L9.3055 9.277L8.88 8.9035L7.917 8.0935H7.853V8.1785L8.075 8.503L9.2475 10.2635L9.3085 10.8035L9.2235 10.98L8.9195 11.0865L8.5855 11.0255L7.8985 10.063L7.191 8.9795L6.6195 8.008L6.5495 8.048L6.2125 11.675L6.0545 11.86L5.69 12L5.3865 11.7695L5.2255 11.396L5.3865 10.658L5.581 9.696L5.7385 8.931L5.8815 7.981L5.9665 7.665L5.9605 7.644L5.8905 7.653L5.1735 8.6365L4.0835 10.109L3.2205 11.0315L3.0135 11.1135L2.655 10.9285L2.6885 10.5975L2.889 10.303L4.083 8.785L4.803 7.844L5.268 7.301L5.265 7.222H5.2375L2.066 9.28L1.501 9.353L1.2575 9.125L1.288 8.752L1.4035 8.6305L2.3575 7.9745L2.3545 7.9775Z"
+          d="M2.3545 7.9775L4.7145 6.654L4.7545 6.539L4.7145 6.475H4.6L4.205 6.451L2.856 6.4145L1.6865 6.366L0.5535 6.305L0.268 6.2445L0 5.892L0.0275 5.716L0.2675 5.5555L0.6105 5.5855L1.3705 5.637L2.5095 5.716L3.3355 5.7645L4.56 5.892H4.7545L4.782 5.8135L4.715 5.7645L4.6635 5.716L3.4845 4.918L2.2085 4.074L1.5405 3.588L1.1785 3.3425L0.9965 3.1115L0.9175 2.6075L1.2455 2.2465L1.686 2.2765L1.7985 2.307L2.245 2.65L3.199 3.388L4.4445 4.3045L4.627 4.4565L4.6995 4.405L4.709 4.3685L4.627 4.2315L3.9495 3.0085L3.2265 1.7635L2.9045 1.2475L2.8195 0.938C2.78711 0.819128 2.76965 0.696687 2.7675 0.5735L3.1415 0.067L3.348 0L3.846 0.067L4.056 0.249L4.366 0.956L4.867 2.0705L5.6445 3.5855L5.8725 4.0345L5.994 4.4505L6.0395 4.578H6.1185V4.505L6.1825 3.652L6.301 2.6045L6.416 1.257L6.456 0.877L6.644 0.422L7.0175 0.176L7.3095 0.316L7.5495 0.6585L7.516 0.8805L7.373 1.806L7.0935 3.2575L6.9115 4.2285H7.0175L7.139 4.1075L7.6315 3.4545L8.4575 2.4225L8.8225 2.0125L9.2475 1.5605L9.521 1.345H10.0375L10.4175 1.9095L10.2475 2.4925L9.7155 3.166L9.275 3.737L8.643 4.587L8.248 5.267L8.2845 5.322L8.3785 5.312L9.8065 5.009L10.578 4.869L11.4985 4.7115L11.915 4.9055L11.9605 5.103L11.7965 5.5065L10.812 5.7495L9.6575 5.9805L7.938 6.387L7.917 6.402L7.9415 6.4325L8.716 6.5055L9.047 6.5235H9.858L11.368 6.636L11.763 6.897L12 7.216L11.9605 7.4585L11.353 7.7685L10.533 7.574L8.6185 7.119L7.9625 6.9545H7.8715V7.0095L8.418 7.5435L9.421 8.4485L10.6755 9.6135L10.739 9.9025L10.578 10.13L10.408 10.1055L9.3055 9.277L8.88 8.9035L7.917 8.0935H7.853V8.1785L8.075 8.503L9.2475 10.2635L9.3085 10.8035L9.2235 10.98L8.9195 11.0865L8.5855 11.0255L7.8985 10.063L7.191 8.9795L6.6195 8.008L6.5495 8.048L6.2125 11.675L6.0545 11.86L5.69 12L5.3865 11.7695L5.2255 11.396L5.3865 10.658L5.581 9.696L5.7385 8.931L5.8815 7.981L5.9665 7.665L5.9605 7.644L5.8905 7.653L5.1735 8.6365L4.0835 10.109L3.2205 11.0315L3.0135 11.1135L2.655 10.9285L2.6885 10.5975L2.889 10.303L4.083 8.785L4.803 7.844L5.268 7.301L5.265 7.222H5.2375L2.066 9.28L1.501 9.353L1.2575 9.6655L1.2375 9.727L0.5535 9.8215L0 9.9155L0.246 10.2675L0.8705 10.7545L2.3045 11.7055L3.0105 12L3.3465 11.7055L3.423 11.396L2.8395 9.9455L2.3545 7.9775Z"
           fillRule="evenodd"
         />
       </svg>
@@ -112,46 +105,6 @@ const providers = {
           strokeLinejoin="round"
           strokeWidth="8"
         />
-        <path
-          d="M516.774 304.217C510.299 275.491 498.208 252.087 480.335 234.214C462.462 216.341 439.058 204.251 410.333 197.775C439.059 191.3 462.462 179.209 480.335 161.336C498.208 143.463 510.299 120.06 516.774 91.334C523.25 120.059 535.34 143.463 553.213 161.336C571.086 179.209 594.49 191.3 623.216 197.775C594.49 204.251 571.086 216.341 553.213 234.214C535.34 252.087 523.25 275.491 516.774 304.217Z"
-          fill="currentColor"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="8"
-        />
-        <path
-          d="M857.5 508.116C763.259 497.644 710.903 445.288 700.432 351.047C689.961 445.288 637.605 497.644 543.364 508.116C637.605 518.587 689.961 570.943 700.432 665.184C710.903 570.943 763.259 518.587 857.5 508.116Z"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="20"
-        />
-        <path
-          d="M700.432 615.957C691.848 589.05 678.575 566.357 660.383 548.165C642.191 529.973 619.499 516.7 592.593 508.116C619.499 499.533 642.191 486.258 660.383 468.066C678.575 449.874 691.848 427.181 700.432 400.274C709.015 427.181 722.289 449.874 740.481 468.066C758.673 486.258 781.365 499.533 808.271 508.116C781.365 516.7 758.673 529.973 740.481 548.165C722.289 566.357 709.015 589.05 700.432 615.957Z"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="20"
-        />
-        <path
-          d="M889.949 121.237C831.049 114.692 798.326 81.9698 791.782 23.0692C785.237 81.9698 752.515 114.692 693.614 121.237C752.515 127.781 785.237 160.504 791.782 219.404C798.326 160.504 831.049 127.781 889.949 121.237Z"
-          fill="currentColor"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="8"
-        />
-        <path
-          d="M791.782 196.795C786.697 176.937 777.869 160.567 765.16 147.858C752.452 135.15 736.082 126.322 716.226 121.237C736.082 116.152 752.452 107.324 765.16 94.6152C777.869 81.9065 786.697 65.5368 791.782 45.6797C796.867 65.5367 805.695 81.9066 818.403 94.6152C831.112 107.324 847.481 116.152 867.338 121.237C847.481 126.322 831.112 135.15 818.403 147.858C805.694 160.567 796.867 176.937 791.782 196.795Z"
-          fill="currentColor"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="8"
-        />
-        <path
-          d="M760.632 764.337C720.719 814.616 669.835 855.1 611.872 882.692C553.91 910.285 490.404 924.255 426.213 923.533C362.022 922.812 298.846 907.419 241.518 878.531C184.19 849.643 134.228 808.026 95.4548 756.863C56.6815 705.7 30.1238 646.346 17.8129 583.343C5.50207 520.339 7.76433 455.354 24.4266 393.359C41.089 331.364 71.7099 274.001 113.947 225.658C156.184 177.315 208.919 139.273 268.117 114.442"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="30"
-        />
       </svg>
     ),
     title: "Open in Scira",
@@ -194,7 +147,7 @@ const useOpenInContext = () => {
   return context;
 };
 
-export type OpenInProps = ComponentProps<typeof DropdownMenu> & {
+export type OpenInProps = ComponentProps<typeof DropdownMenu.Root> & {
   query: string;
 };
 
@@ -203,168 +156,217 @@ export const OpenIn = ({ query, ...props }: OpenInProps) => {
 
   return (
     <OpenInContext.Provider value={contextValue}>
-      <DropdownMenu {...props} />
+      <DropdownMenu.Root {...props} />
     </OpenInContext.Provider>
   );
 };
 
-export type OpenInContentProps = ComponentProps<typeof DropdownMenuContent>;
+export type OpenInContentProps = ComponentProps<typeof DropdownMenu.Content>;
 
 export const OpenInContent = ({ className, ...props }: OpenInContentProps) => (
-  <DropdownMenuContent
+  <DropdownMenu.Content
+    className={css(
+      {
+        width: "15rem",
+      },
+      className,
+    )}
     align="start"
-    className={cn("w-[240px]", className)}
     {...props}
   />
 );
 
-export type OpenInItemProps = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInItemProps = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInItem = (props: OpenInItemProps) => (
-  <DropdownMenuItem {...props} />
+  <DropdownMenu.Item {...props} />
 );
 
-export type OpenInLabelProps = ComponentProps<typeof DropdownMenuLabel>;
+export type OpenInLabelProps = ComponentProps<typeof DropdownMenu.Label>;
 
 export const OpenInLabel = (props: OpenInLabelProps) => (
-  <DropdownMenuLabel {...props} />
+  <DropdownMenu.Label {...props} />
 );
 
-export type OpenInSeparatorProps = ComponentProps<typeof DropdownMenuSeparator>;
+export type OpenInSeparatorProps = ComponentProps<
+  typeof DropdownMenu.Separator
+>;
 
 export const OpenInSeparator = (props: OpenInSeparatorProps) => (
-  <DropdownMenuSeparator {...props} />
+  <DropdownMenu.Separator {...props} />
 );
 
-export type OpenInTriggerProps = ComponentProps<typeof DropdownMenuTrigger>;
+export type OpenInTriggerProps = ComponentProps<typeof DropdownMenu.Trigger>;
 
 export const OpenInTrigger = ({ children, ...props }: OpenInTriggerProps) => (
-  <DropdownMenuTrigger {...props} asChild>
+  <DropdownMenu.Trigger {...props} asChild>
     {children ?? (
       <Button type="button" variant="outline">
         Open in chat
-        <ChevronDownIcon className="size-4" />
+        <ChevronDownIcon className={css({ width: "4", height: "4" })} />
       </Button>
     )}
-  </DropdownMenuTrigger>
+  </DropdownMenu.Trigger>
 );
 
-export type OpenInChatGPTProps = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInChatGPTProps = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInChatGPT = (props: OpenInChatGPTProps) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.chatgpt.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.chatgpt.icon}</span>
-        <span className="flex-1">{providers.chatgpt.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>
+          {providers.chatgpt.icon}
+        </span>
+        <span className={css({ flex: "1" })}>{providers.chatgpt.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };
 
-export type OpenInClaudeProps = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInClaudeProps = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInClaude = (props: OpenInClaudeProps) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.claude.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.claude.icon}</span>
-        <span className="flex-1">{providers.claude.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>
+          {providers.claude.icon}
+        </span>
+        <span className={css({ flex: "1" })}>{providers.claude.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };
 
-export type OpenInT3Props = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInT3Props = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInT3 = (props: OpenInT3Props) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.t3.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.t3.icon}</span>
-        <span className="flex-1">{providers.t3.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>{providers.t3.icon}</span>
+        <span className={css({ flex: "1" })}>{providers.t3.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };
 
-export type OpenInSciraProps = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInSciraProps = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInScira = (props: OpenInSciraProps) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.scira.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.scira.icon}</span>
-        <span className="flex-1">{providers.scira.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>{providers.scira.icon}</span>
+        <span className={css({ flex: "1" })}>{providers.scira.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };
 
-export type OpenInv0Props = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInv0Props = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInv0 = (props: OpenInv0Props) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.v0.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.v0.icon}</span>
-        <span className="flex-1">{providers.v0.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>{providers.v0.icon}</span>
+        <span className={css({ flex: "1" })}>{providers.v0.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };
 
-export type OpenInCursorProps = ComponentProps<typeof DropdownMenuItem>;
+export type OpenInCursorProps = ComponentProps<typeof DropdownMenu.Item>;
 
 export const OpenInCursor = (props: OpenInCursorProps) => {
   const { query } = useOpenInContext();
   return (
-    <DropdownMenuItem asChild {...props}>
+    <DropdownMenu.Item asChild {...props}>
       <a
-        className="flex items-center gap-2"
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
         href={providers.cursor.createUrl(query)}
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{providers.cursor.icon}</span>
-        <span className="flex-1">{providers.cursor.title}</span>
-        <ExternalLinkIcon className="size-4 shrink-0" />
+        <span className={css({ flexShrink: "0" })}>
+          {providers.cursor.icon}
+        </span>
+        <span className={css({ flex: "1" })}>{providers.cursor.title}</span>
+        <ExternalLinkIcon
+          className={css({ width: "4", height: "4", flexShrink: "0" })}
+        />
       </a>
-    </DropdownMenuItem>
+    </DropdownMenu.Item>
   );
 };

@@ -1,13 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Tooltip } from "@/components/ui/tooltip";
+import { css } from "styled-system/css";
 import type { LucideIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes } from "react";
@@ -16,9 +11,19 @@ export type ArtifactProps = HTMLAttributes<HTMLDivElement>;
 
 export const Artifact = ({ className, ...props }: ArtifactProps) => (
   <div
-    className={cn(
-      "flex flex-col overflow-hidden rounded-lg border bg-background shadow-sm",
-      className
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        borderRadius: "l2",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "border",
+        backgroundColor: "bg.default",
+        boxShadow: "sm",
+      },
+      className,
     )}
     {...props}
   />
@@ -31,9 +36,19 @@ export const ArtifactHeader = ({
   ...props
 }: ArtifactHeaderProps) => (
   <div
-    className={cn(
-      "flex items-center justify-between border-b bg-muted/50 px-4 py-3",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderBottomWidth: "1px",
+        borderBottomStyle: "solid",
+        borderBottomColor: "border",
+        backgroundColor: "bg.subtle",
+        paddingX: "4",
+        paddingY: "3",
+      },
+      className,
     )}
     {...props}
   />
@@ -45,21 +60,29 @@ export const ArtifactClose = ({
   className,
   children,
   size = "sm",
-  variant = "ghost",
+  variant = "plain",
   ...props
 }: ArtifactCloseProps) => (
   <Button
-    className={cn(
-      "size-8 p-0 text-muted-foreground hover:text-foreground",
-      className
+    className={css(
+      {
+        width: "8",
+        height: "8",
+        padding: "0",
+        color: "fg.muted",
+        _hover: {
+          color: "fg.default",
+        },
+      },
+      className,
     )}
     size={size}
     type="button"
     variant={variant}
     {...props}
   >
-    {children ?? <XIcon className="size-4" />}
-    <span className="sr-only">Close</span>
+    {children ?? <XIcon className={css({ width: "4", height: "4" })} />}
+    <span className={css({ srOnly: true })}>Close</span>
   </Button>
 );
 
@@ -67,7 +90,14 @@ export type ArtifactTitleProps = HTMLAttributes<HTMLParagraphElement>;
 
 export const ArtifactTitle = ({ className, ...props }: ArtifactTitleProps) => (
   <p
-    className={cn("font-medium text-foreground text-sm", className)}
+    className={css(
+      {
+        fontWeight: "medium",
+        color: "fg.default",
+        fontSize: "sm",
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -78,7 +108,16 @@ export const ArtifactDescription = ({
   className,
   ...props
 }: ArtifactDescriptionProps) => (
-  <p className={cn("text-muted-foreground text-sm", className)} {...props} />
+  <p
+    className={css(
+      {
+        color: "fg.muted",
+        fontSize: "sm",
+      },
+      className,
+    )}
+    {...props}
+  />
 );
 
 export type ArtifactActionsProps = HTMLAttributes<HTMLDivElement>;
@@ -87,7 +126,17 @@ export const ArtifactActions = ({
   className,
   ...props
 }: ArtifactActionsProps) => (
-  <div className={cn("flex items-center gap-1", className)} {...props} />
+  <div
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "1",
+      },
+      className,
+    )}
+    {...props}
+  />
 );
 
 export type ArtifactActionProps = ComponentProps<typeof Button> & {
@@ -103,36 +152,35 @@ export const ArtifactAction = ({
   children,
   className,
   size = "sm",
-  variant = "ghost",
+  variant = "plain",
   ...props
 }: ArtifactActionProps) => {
   const button = (
     <Button
-      className={cn(
-        "size-8 p-0 text-muted-foreground hover:text-foreground",
-        className
+      className={css(
+        {
+          width: "8",
+          height: "8",
+          padding: "0",
+          color: "fg.muted",
+          _hover: {
+            color: "fg.default",
+          },
+        },
+        className,
       )}
       size={size}
       type="button"
       variant={variant}
       {...props}
     >
-      {Icon ? <Icon className="size-4" /> : children}
-      <span className="sr-only">{label || tooltip}</span>
+      {Icon ? <Icon className={css({ width: "4", height: "4" })} /> : children}
+      <span className={css({ srOnly: true })}>{label || tooltip}</span>
     </Button>
   );
 
   if (tooltip) {
-    return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>{button}</TooltipTrigger>
-          <TooltipContent>
-            <p>{tooltip}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
+    return <Tooltip content={tooltip}>{button}</Tooltip>;
   }
 
   return button;
@@ -144,5 +192,15 @@ export const ArtifactContent = ({
   className,
   ...props
 }: ArtifactContentProps) => (
-  <div className={cn("flex-1 overflow-auto p-4", className)} {...props} />
+  <div
+    className={css(
+      {
+        flex: "1",
+        overflow: "auto",
+        padding: "4",
+      },
+      className,
+    )}
+    {...props}
+  />
 );

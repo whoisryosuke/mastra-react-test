@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import { MicIcon, SquareIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -61,12 +61,6 @@ type SpeechInputMode = "speech-recognition" | "media-recorder" | "none";
 
 export type SpeechInputProps = ComponentProps<typeof Button> & {
   onTranscriptionChange?: (text: string) => void;
-  /**
-   * Callback for when audio is recorded using MediaRecorder fallback.
-   * This is called in browsers that don't support the Web Speech API (Firefox, Safari).
-   * The callback receives an audio Blob that should be sent to a transcription service.
-   * Return the transcribed text, which will be passed to onTranscriptionChange.
-   */
   onAudioRecorded?: (audioBlob: Blob) => Promise<string>;
   lang?: string;
 };
@@ -108,11 +102,9 @@ export const SpeechInput = ({
   const onAudioRecordedRef =
     useRef<SpeechInputProps["onAudioRecorded"]>(onAudioRecorded);
 
-  // Keep refs in sync
   onTranscriptionChangeRef.current = onTranscriptionChange;
   onAudioRecordedRef.current = onAudioRecorded;
 
-  // Initialize Speech Recognition when mode is speech-recognition
   useEffect(() => {
     if (mode !== "speech-recognition") {
       return;
@@ -177,7 +169,6 @@ export const SpeechInput = ({
     };
   }, [mode, lang]);
 
-  // Cleanup MediaRecorder and stream on unmount
   useEffect(
     () => () => {
       if (mediaRecorderRef.current?.state === "recording") {
@@ -189,10 +180,9 @@ export const SpeechInput = ({
         }
       }
     },
-    []
+    [],
   );
 
-  // Start MediaRecorder recording
   const startMediaRecorder = useCallback(async () => {
     if (!onAudioRecordedRef.current) {
       return;
@@ -255,7 +245,6 @@ export const SpeechInput = ({
     }
   }, []);
 
-  // Stop MediaRecorder recording
   const stopMediaRecorder = useCallback(() => {
     if (mediaRecorderRef.current?.state === "recording") {
       mediaRecorderRef.current.stop();
@@ -279,7 +268,6 @@ export const SpeechInput = ({
     }
   }, [mode, isListening, startMediaRecorder, stopMediaRecorder]);
 
-  // Determine if button should be disabled
   const isDisabled =
     mode === "none" ||
     (mode === "speech-recognition" && !isRecognitionReady) ||
@@ -287,13 +275,26 @@ export const SpeechInput = ({
     isProcessing;
 
   return (
-    <div className="relative inline-flex items-center justify-center">
-      {/* Animated pulse rings */}
+    <div
+      className={css({
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+      })}
+    >
       {isListening &&
         [0, 1, 2].map((index) => (
           <div
-            className="absolute inset-0 animate-ping rounded-full border-2 border-red-400/30"
             key={index}
+            className={css({
+              position: "absolute",
+              inset: "0",
+              borderRadius: "full",
+              borderWidth: "2px",
+              borderColor: "red.400 / 0.3",
+              animation: "ping",
+            })}
             style={{
               animationDelay: `${index * 0.3}s`,
               animationDuration: "2s",
@@ -301,22 +302,45 @@ export const SpeechInput = ({
           />
         ))}
 
-      {/* Main record button */}
       <Button
-        className={cn(
-          "relative z-10 rounded-full transition-all duration-300",
+        className={css(
+          {
+            position: "relative",
+            zIndex: "10",
+            borderRadius: "full",
+            transitionProperty: "all",
+            transitionDuration: "300ms",
+          },
           isListening
-            ? "bg-destructive text-white hover:bg-destructive/80 hover:text-white"
-            : "bg-primary text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground",
-          className
+            ? {
+                backgroundColor: "destructive",
+                color: "white",
+                _hover: {
+                  backgroundColor: "destructive / 0.8",
+                  color: "white",
+                },
+              }
+            : {
+                backgroundColor: "primary",
+                color: "primary.foreground",
+                _hover: {
+                  backgroundColor: "primary / 0.8",
+                  color: "primary.foreground",
+                },
+              },
+          className,
         )}
         disabled={isDisabled}
         onClick={toggleListening}
         {...props}
       >
         {isProcessing && <Spinner />}
-        {!isProcessing && isListening && <SquareIcon className="size-4" />}
-        {!(isProcessing || isListening) && <MicIcon className="size-4" />}
+        {!isProcessing && isListening && (
+          <SquareIcon className={css({ width: "4", height: "4" })} />
+        )}
+        {!(isProcessing || isListening) && (
+          <MicIcon className={css({ width: "4", height: "4" })} />
+        )}
       </Button>
     </div>
   );

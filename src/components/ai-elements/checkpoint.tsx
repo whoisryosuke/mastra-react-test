@@ -2,12 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Tooltip } from "@/components/ui/tooltip";
+import { css } from "styled-system/css";
 import type { LucideProps } from "lucide-react";
 import { BookmarkIcon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes } from "react";
@@ -20,9 +16,15 @@ export const Checkpoint = ({
   ...props
 }: CheckpointProps) => (
   <div
-    className={cn(
-      "flex items-center gap-0.5 overflow-hidden text-muted-foreground",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5",
+        overflow: "hidden",
+        color: "fg.muted",
+      },
+      className,
     )}
     {...props}
   >
@@ -39,7 +41,17 @@ export const CheckpointIcon = ({
   ...props
 }: CheckpointIconProps) =>
   children ?? (
-    <BookmarkIcon className={cn("size-4 shrink-0", className)} {...props} />
+    <BookmarkIcon
+      className={css(
+        {
+          width: "4",
+          height: "4",
+          flexShrink: "0",
+        },
+        className,
+      )}
+      {...props}
+    />
   );
 
 export type CheckpointTriggerProps = ComponentProps<typeof Button> & {
@@ -48,21 +60,16 @@ export type CheckpointTriggerProps = ComponentProps<typeof Button> & {
 
 export const CheckpointTrigger = ({
   children,
-  variant = "ghost",
+  variant = "plain",
   size = "sm",
   tooltip,
   ...props
 }: CheckpointTriggerProps) =>
   tooltip ? (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button size={size} type="button" variant={variant} {...props}>
-          {children}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent align="start" side="bottom">
-        {tooltip}
-      </TooltipContent>
+    <Tooltip content={tooltip}>
+      <Button size={size} type="button" variant={variant} {...props}>
+        {children}
+      </Button>
     </Tooltip>
   ) : (
     <Button size={size} type="button" variant={variant} {...props}>

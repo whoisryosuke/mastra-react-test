@@ -1,24 +1,27 @@
 "use client";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import { BookIcon, ChevronDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
 export type SourcesProps = ComponentProps<"div">;
 
 export const Sources = ({ className, ...props }: SourcesProps) => (
-  <Collapsible
-    className={cn("not-prose mb-4 text-primary text-xs", className)}
+  <Collapsible.Root
+    className={css(
+      {
+        marginBottom: "4",
+        color: "primary",
+        fontSize: "xs",
+      },
+      className,
+    )}
     {...props}
   />
 );
 
-export type SourcesTriggerProps = ComponentProps<typeof CollapsibleTrigger> & {
+export type SourcesTriggerProps = ComponentProps<typeof Collapsible.Trigger> & {
   count: number;
 };
 
@@ -28,30 +31,42 @@ export const SourcesTrigger = ({
   children,
   ...props
 }: SourcesTriggerProps) => (
-  <CollapsibleTrigger
-    className={cn("flex items-center gap-2", className)}
+  <Collapsible.Trigger
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "2",
+      },
+      className,
+    )}
     {...props}
   >
     {children ?? (
       <>
-        <p className="font-medium">Used {count} sources</p>
-        <ChevronDownIcon className="h-4 w-4" />
+        <p className={css({ fontWeight: "medium" })}>Used {count} sources</p>
+        <ChevronDownIcon className={css({ width: "4", height: "4" })} />
       </>
     )}
-  </CollapsibleTrigger>
+  </Collapsible.Trigger>
 );
 
-export type SourcesContentProps = ComponentProps<typeof CollapsibleContent>;
+export type SourcesContentProps = ComponentProps<typeof Collapsible.Content>;
 
 export const SourcesContent = ({
   className,
   ...props
 }: SourcesContentProps) => (
-  <CollapsibleContent
-    className={cn(
-      "mt-3 flex w-fit flex-col gap-2",
-      "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
-      className
+  <Collapsible.Content
+    className={css(
+      {
+        marginTop: "3",
+        display: "flex",
+        width: "fit",
+        flexDirection: "column",
+        gap: "2",
+      },
+      className,
     )}
     {...props}
   />
@@ -59,9 +74,22 @@ export const SourcesContent = ({
 
 export type SourceProps = ComponentProps<"a">;
 
-export const Source = ({ href, title, children, ...props }: SourceProps) => (
+export const Source = ({
+  className,
+  href,
+  title,
+  children,
+  ...props
+}: SourceProps) => (
   <a
-    className="flex items-center gap-2"
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "2",
+      },
+      className,
+    )}
     href={href}
     rel="noreferrer"
     target="_blank"
@@ -69,8 +97,10 @@ export const Source = ({ href, title, children, ...props }: SourceProps) => (
   >
     {children ?? (
       <>
-        <BookIcon className="h-4 w-4" />
-        <span className="block font-medium">{title}</span>
+        <BookIcon className={css({ width: "4", height: "4" })} />
+        <span className={css({ display: "block", fontWeight: "medium" })}>
+          {title}
+        </span>
       </>
     )}
   </a>

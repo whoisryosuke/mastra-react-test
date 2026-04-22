@@ -1,17 +1,9 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import * as Card from "@/components/ui/card";
+import { css } from "styled-system/css";
 import { Handle, Position } from "@xyflow/react";
 import type { ComponentProps } from "react";
 
-export type NodeProps = ComponentProps<typeof Card> & {
+export type NodeProps = ComponentProps<typeof Card.Root> & {
   handles: {
     target: boolean;
     source: boolean;
@@ -19,53 +11,96 @@ export type NodeProps = ComponentProps<typeof Card> & {
 };
 
 export const Node = ({ handles, className, ...props }: NodeProps) => (
-  <Card
-    className={cn(
-      "node-container relative size-full h-auto w-sm gap-0 rounded-md p-0",
-      className
+  <Card.Root
+    className={css(
+      {
+        position: "relative",
+        width: "full",
+        height: "auto",
+        minWidth: "20rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0",
+        borderRadius: "l2",
+        padding: "0",
+      },
+      className,
     )}
     {...props}
   >
     {handles.target && <Handle position={Position.Left} type="target" />}
     {handles.source && <Handle position={Position.Right} type="source" />}
     {props.children}
-  </Card>
+  </Card.Root>
 );
 
-export type NodeHeaderProps = ComponentProps<typeof CardHeader>;
+export type NodeHeaderProps = ComponentProps<typeof Card.Header>;
 
 export const NodeHeader = ({ className, ...props }: NodeHeaderProps) => (
-  <CardHeader
-    className={cn("gap-0.5 rounded-t-md border-b bg-secondary p-3!", className)}
+  <Card.Header
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5",
+        borderBottomWidth: "1px",
+        borderBottomStyle: "solid",
+        borderBottomColor: "border",
+        borderTopRadius: "l2",
+        backgroundColor: "bg.subtle",
+        padding: "3 !important",
+      },
+      className,
+    )}
     {...props}
   />
 );
 
-export type NodeTitleProps = ComponentProps<typeof CardTitle>;
+export type NodeTitleProps = ComponentProps<typeof Card.Title>;
 
-export const NodeTitle = (props: NodeTitleProps) => <CardTitle {...props} />;
+export const NodeTitle = (props: NodeTitleProps) => <Card.Title {...props} />;
 
-export type NodeDescriptionProps = ComponentProps<typeof CardDescription>;
+export type NodeDescriptionProps = ComponentProps<typeof Card.Description>;
 
 export const NodeDescription = (props: NodeDescriptionProps) => (
-  <CardDescription {...props} />
+  <Card.Description {...props} />
 );
 
-export type NodeActionProps = ComponentProps<typeof CardAction>;
+export type NodeActionProps = ComponentProps<typeof Card.Action>;
 
-export const NodeAction = (props: NodeActionProps) => <CardAction {...props} />;
+export const NodeAction = (props: NodeActionProps) => (
+  <Card.Action {...props} />
+);
 
-export type NodeContentProps = ComponentProps<typeof CardContent>;
+export type NodeContentProps = ComponentProps<typeof Card.Content>;
 
 export const NodeContent = ({ className, ...props }: NodeContentProps) => (
-  <CardContent className={cn("p-3", className)} {...props} />
+  <Card.Content
+    className={css(
+      {
+        padding: "3",
+      },
+      className,
+    )}
+    {...props}
+  />
 );
 
-export type NodeFooterProps = ComponentProps<typeof CardFooter>;
+export type NodeFooterProps = ComponentProps<typeof Card.Footer>;
 
 export const NodeFooter = ({ className, ...props }: NodeFooterProps) => (
-  <CardFooter
-    className={cn("rounded-b-md border-t bg-secondary p-3!", className)}
+  <Card.Footer
+    className={css(
+      {
+        borderTopWidth: "1px",
+        borderTopStyle: "solid",
+        borderTopColor: "border",
+        borderBottomRadius: "l2",
+        backgroundColor: "bg.subtle",
+        padding: "3 !important",
+      },
+      className,
+    )}
     {...props}
   />
 );

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import type { UIMessage } from "ai";
 import { ArrowDownIcon, DownloadIcon } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -12,7 +12,14 @@ export type ConversationProps = ComponentProps<typeof StickToBottom>;
 
 export const Conversation = ({ className, ...props }: ConversationProps) => (
   <StickToBottom
-    className={cn("relative flex-1 overflow-y-hidden", className)}
+    className={css(
+      {
+        position: "relative",
+        flex: "1",
+        overflowY: "hidden",
+      },
+      className,
+    )}
     initial="smooth"
     resize="smooth"
     role="log"
@@ -29,7 +36,15 @@ export const ConversationContent = ({
   ...props
 }: ConversationContentProps) => (
   <StickToBottom.Content
-    className={cn("flex flex-col gap-8 p-4", className)}
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "8",
+        padding: "4",
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -49,19 +64,57 @@ export const ConversationEmptyState = ({
   ...props
 }: ConversationEmptyStateProps) => (
   <div
-    className={cn(
-      "flex size-full flex-col items-center justify-center gap-3 p-8 text-center",
-      className
+    className={css(
+      {
+        display: "flex",
+        width: "full",
+        height: "full",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "3",
+        padding: "8",
+        textAlign: "center",
+      },
+      className,
     )}
     {...props}
   >
     {children ?? (
       <>
-        {icon && <div className="text-muted-foreground">{icon}</div>}
-        <div className="space-y-1">
-          <h3 className="font-medium text-sm">{title}</h3>
+        {icon && (
+          <div
+            className={css({
+              color: "fg.muted",
+            })}
+          >
+            {icon}
+          </div>
+        )}
+        <div
+          className={css({
+            display: "flex",
+            flexDirection: "column",
+            gap: "1",
+          })}
+        >
+          <h3
+            className={css({
+              fontWeight: "medium",
+              fontSize: "sm",
+            })}
+          >
+            {title}
+          </h3>
           {description && (
-            <p className="text-muted-foreground text-sm">{description}</p>
+            <p
+              className={css({
+                color: "fg.muted",
+                fontSize: "sm",
+              })}
+            >
+              {description}
+            </p>
           )}
         </div>
       </>
@@ -84,17 +137,29 @@ export const ConversationScrollButton = ({
   return (
     !isAtBottom && (
       <Button
-        className={cn(
-          "absolute bottom-4 left-[50%] translate-x-[-50%] rounded-full dark:bg-background dark:hover:bg-muted",
-          className
+        className={css(
+          {
+            position: "absolute",
+            bottom: "4",
+            left: "50%",
+            transform: "translateX(-50%)",
+            borderRadius: "full",
+            _dark: {
+              backgroundColor: "bg.default",
+              _hover: {
+                backgroundColor: "bg.subtle",
+              },
+            },
+          },
+          className,
         )}
         onClick={handleScrollToBottom}
-        size="icon"
+        size="sm"
         type="button"
         variant="outline"
         {...props}
       >
-        <ArrowDownIcon className="size-4" />
+        <ArrowDownIcon className={css({ width: "4", height: "4" })} />
       </Button>
     )
   );
@@ -125,8 +190,8 @@ export const messagesToMarkdown = (
   messages: UIMessage[],
   formatMessage: (
     message: UIMessage,
-    index: number
-  ) => string = defaultFormatMessage
+    index: number,
+  ) => string = defaultFormatMessage,
 ): string => messages.map((msg, i) => formatMessage(msg, i)).join("\n\n");
 
 export const ConversationDownload = ({
@@ -152,17 +217,30 @@ export const ConversationDownload = ({
 
   return (
     <Button
-      className={cn(
-        "absolute top-4 right-4 rounded-full dark:bg-background dark:hover:bg-muted",
-        className
+      className={css(
+        {
+          position: "absolute",
+          top: "4",
+          right: "4",
+          borderRadius: "full",
+          _dark: {
+            backgroundColor: "bg.default",
+            _hover: {
+              backgroundColor: "bg.subtle",
+            },
+          },
+        },
+        className,
       )}
       onClick={handleDownload}
-      size="icon"
+      size="sm"
       type="button"
       variant="outline"
       {...props}
     >
-      {children ?? <DownloadIcon className="size-4" />}
+      {children ?? (
+        <DownloadIcon className={css({ width: "4", height: "4" })} />
+      )}
     </Button>
   );
 };

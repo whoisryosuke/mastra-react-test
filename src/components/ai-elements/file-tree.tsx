@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import {
   ChevronRightIcon,
   FileIcon,
@@ -70,25 +66,39 @@ export const FileTree = ({
       setInternalExpanded(newExpanded);
       onExpandedChange?.(newExpanded);
     },
-    [expandedPaths, onExpandedChange]
+    [expandedPaths, onExpandedChange],
   );
 
   const contextValue = useMemo(
     () => ({ expandedPaths, onSelect, selectedPath, togglePath }),
-    [expandedPaths, onSelect, selectedPath, togglePath]
+    [expandedPaths, onSelect, selectedPath, togglePath],
   );
 
   return (
     <FileTreeContext.Provider value={contextValue}>
       <div
-        className={cn(
-          "rounded-lg border bg-background font-mono text-sm",
-          className
+        className={css(
+          {
+            borderRadius: "l2",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "border",
+            backgroundColor: "bg.default",
+            fontFamily: "mono",
+            fontSize: "sm",
+          },
+          className,
         )}
         role="tree"
         {...props}
       >
-        <div className="p-2">{children}</div>
+        <div
+          className={css({
+            padding: "2",
+          })}
+        >
+          {children}
+        </div>
       </div>
     </FileTreeContext.Provider>
   );
@@ -101,7 +111,15 @@ export const FileTreeIcon = ({
   children,
   ...props
 }: FileTreeIconProps) => (
-  <span className={cn("shrink-0", className)} {...props}>
+  <span
+    className={css(
+      {
+        flexShrink: "0",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </span>
 );
@@ -113,7 +131,17 @@ export const FileTreeName = ({
   children,
   ...props
 }: FileTreeNameProps) => (
-  <span className={cn("truncate", className)} {...props}>
+  <span
+    className={css(
+      {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </span>
 );
@@ -157,57 +185,121 @@ export const FileTreeFolder = ({
 
   const folderContextValue = useMemo(
     () => ({ isExpanded, name, path }),
-    [isExpanded, name, path]
+    [isExpanded, name, path],
   );
 
   return (
     <FileTreeFolderContext.Provider value={folderContextValue}>
-      <Collapsible onOpenChange={handleOpenChange} open={isExpanded}>
+      <Collapsible.Root onOpenChange={handleOpenChange} open={isExpanded}>
         <div
-          className={cn("", className)}
+          className={css({}, className)}
           role="treeitem"
           tabIndex={0}
           {...props}
         >
           <div
-            className={cn(
-              "flex w-full items-center gap-1 rounded px-2 py-1 text-left transition-colors hover:bg-muted/50",
-              isSelected && "bg-muted"
+            className={css(
+              {
+                display: "flex",
+                width: "full",
+                alignItems: "center",
+                gap: "1",
+                borderRadius: "l2",
+                paddingX: "2",
+                paddingY: "1",
+                textAlign: "left",
+                transition: "colors",
+                _hover: {
+                  backgroundColor: "bg.subtle/50",
+                },
+              },
+              isSelected && {
+                backgroundColor: "bg.subtle",
+              },
             )}
           >
-            <CollapsibleTrigger asChild>
+            <Collapsible.Trigger asChild>
               <button
-                className="flex shrink-0 cursor-pointer items-center border-none bg-transparent p-0"
+                className={css({
+                  display: "flex",
+                  flexShrink: "0",
+                  cursor: "pointer",
+                  alignItems: "center",
+                  borderWidth: "0",
+                  backgroundColor: "transparent",
+                  padding: "0",
+                })}
                 type="button"
               >
                 <ChevronRightIcon
-                  className={cn(
-                    "size-4 shrink-0 text-muted-foreground transition-transform",
-                    isExpanded && "rotate-90"
+                  className={css(
+                    {
+                      width: "4",
+                      height: "4",
+                      flexShrink: "0",
+                      color: "fg.muted",
+                      transition: "transform 0.2s",
+                    },
+                    isExpanded && {
+                      transform: "rotate(90deg)",
+                    },
                   )}
                 />
               </button>
-            </CollapsibleTrigger>
+            </Collapsible.Trigger>
             <button
-              className="flex min-w-0 flex-1 cursor-pointer items-center gap-1 border-none bg-transparent p-0 text-left"
+              className={css({
+                display: "flex",
+                minWidth: "0",
+                flex: "1",
+                cursor: "pointer",
+                alignItems: "center",
+                gap: "1",
+                borderWidth: "0",
+                backgroundColor: "transparent",
+                padding: "0",
+                textAlign: "left",
+              })}
               onClick={handleSelect}
               type="button"
             >
               <FileTreeIcon>
                 {isExpanded ? (
-                  <FolderOpenIcon className="size-4 text-blue-500" />
+                  <FolderOpenIcon
+                    className={css({
+                      width: "4",
+                      height: "4",
+                      color: "blue.5",
+                    })}
+                  />
                 ) : (
-                  <FolderIcon className="size-4 text-blue-500" />
+                  <FolderIcon
+                    className={css({
+                      width: "4",
+                      height: "4",
+                      color: "blue.5",
+                    })}
+                  />
                 )}
               </FileTreeIcon>
               <FileTreeName>{name}</FileTreeName>
             </button>
           </div>
-          <CollapsibleContent>
-            <div className="ml-4 border-l pl-2">{children}</div>
-          </CollapsibleContent>
+          <Collapsible.Content>
+            <div
+              className={css({
+                marginLeft: "1rem",
+                borderLeftWidth: "1px",
+                borderLeftStyle: "solid",
+                borderLeftColor: "border",
+                paddingLeft: "2",
+              })}
+            >
+              {children}
+            </div>
+          </Collapsible.Content>
         </div>
-      </Collapsible>
+      </Collapsible.Root>
     </FileTreeFolderContext.Provider>
   );
 };
@@ -249,7 +341,7 @@ export const FileTreeFile = ({
         onSelect?.(path);
       }
     },
-    [onSelect, path]
+    [onSelect, path],
   );
 
   const fileContextValue = useMemo(() => ({ name, path }), [name, path]);
@@ -257,10 +349,24 @@ export const FileTreeFile = ({
   return (
     <FileTreeFileContext.Provider value={fileContextValue}>
       <div
-        className={cn(
-          "flex cursor-pointer items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-muted/50",
-          isSelected && "bg-muted",
-          className
+        className={css(
+          {
+            display: "flex",
+            cursor: "pointer",
+            alignItems: "center",
+            gap: "1",
+            borderRadius: "l2",
+            paddingX: "2",
+            paddingY: "1",
+            transition: "colors",
+            _hover: {
+              backgroundColor: "bg.subtle/50",
+            },
+          },
+          isSelected && {
+            backgroundColor: "bg.subtle",
+          },
+          className,
         )}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
@@ -271,9 +377,23 @@ export const FileTreeFile = ({
         {children ?? (
           <>
             {/* Spacer for alignment */}
-            <span className="size-4 shrink-0" />
+            <span
+              className={css({
+                width: "4",
+                height: "4",
+                flexShrink: "0",
+              })}
+            />
             <FileTreeIcon>
-              {icon ?? <FileIcon className="size-4 text-muted-foreground" />}
+              {icon ?? (
+                <FileIcon
+                  className={css({
+                    width: "4",
+                    height: "4",
+                    color: "fg.muted",
+                  })}
+                />
+              )}
             </FileTreeIcon>
             <FileTreeName>{name}</FileTreeName>
           </>
@@ -293,7 +413,15 @@ export const FileTreeActions = ({
   ...props
 }: FileTreeActionsProps) => (
   <div
-    className={cn("ml-auto flex items-center gap-1", className)}
+    className={css(
+      {
+        marginLeft: "auto",
+        display: "flex",
+        alignItems: "center",
+        gap: "1",
+      },
+      className,
+    )}
     onClick={stopPropagation}
     onKeyDown={stopPropagation}
     role="group"

@@ -1,27 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  ScrollArea,
-  ScrollBar,
-} from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import * as ScrollArea from "@/components/ui/scroll-area";
+import { css } from "styled-system/css";
 import type { ComponentProps } from "react";
 import { useCallback } from "react";
 
-export type SuggestionsProps = ComponentProps<typeof ScrollArea>;
+export type SuggestionsProps = ComponentProps<typeof ScrollArea.Root>;
 
 export const Suggestions = ({
   className,
   children,
   ...props
 }: SuggestionsProps) => (
-  <ScrollArea className="w-full overflow-x-auto whitespace-nowrap" {...props}>
-    <div className={cn("flex w-max flex-nowrap items-center gap-2", className)}>
+  <ScrollArea.Root
+    className={css(
+      {
+        width: "full",
+        overflowX: "auto",
+        whiteSpace: "nowrap",
+      },
+      className,
+    )}
+    {...props}
+  >
+    <div
+      className={css({
+        display: "flex",
+        width: "max",
+        flexWrap: "nowrap",
+        alignItems: "center",
+        gap: "2",
+      })}
+    >
       {children}
     </div>
-    <ScrollBar className="hidden" orientation="horizontal" />
-  </ScrollArea>
+  </ScrollArea.Root>
 );
 
 export type SuggestionProps = Omit<ComponentProps<typeof Button>, "onClick"> & {
@@ -44,7 +58,14 @@ export const Suggestion = ({
 
   return (
     <Button
-      className={cn("cursor-pointer rounded-full px-4", className)}
+      className={css(
+        {
+          cursor: "pointer",
+          borderRadius: "full",
+          paddingX: "4",
+        },
+        className,
+      )}
       onClick={handleClick}
       size={size}
       type="button"

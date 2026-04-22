@@ -1,30 +1,27 @@
 "use client";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import * as Tabs from "@/components/ui/tabs";
+import { css } from "styled-system/css";
 import type { ToolUIPart } from "ai";
 import { ChevronDownIcon, Code } from "lucide-react";
 import type { ComponentProps } from "react";
 
 import { getStatusBadge } from "./tool";
 
-export type SandboxRootProps = ComponentProps<typeof Collapsible>;
+export type SandboxRootProps = ComponentProps<typeof Collapsible.Root>;
 
 export const Sandbox = ({ className, ...props }: SandboxRootProps) => (
-  <Collapsible
-    className={cn(
-      "not-prose group mb-4 w-full overflow-hidden rounded-md border",
-      className
+  <Collapsible.Root
+    className={css(
+      {
+        marginBottom: "4",
+        width: "full",
+        overflow: "hidden",
+        borderRadius: "md",
+        borderWidth: "1px",
+      },
+      className,
     )}
     defaultOpen
     {...props}
@@ -43,41 +40,68 @@ export const SandboxHeader = ({
   state,
   ...props
 }: SandboxHeaderProps) => (
-  <CollapsibleTrigger
-    className={cn(
-      "flex w-full items-center justify-between gap-4 p-3",
-      className
+  <Collapsible.Trigger
+    className={css(
+      {
+        display: "flex",
+        width: "full",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "4",
+        padding: "3",
+      },
+      className,
     )}
     {...props}
   >
-    <div className="flex items-center gap-2">
-      <Code className="size-4 text-muted-foreground" />
-      <span className="font-medium text-sm">{title}</span>
+    <div className={css({ display: "flex", alignItems: "center", gap: "2" })}>
+      <Code
+        className={css({ width: "4", height: "4", color: "muted.foreground" })}
+      />
+      <span className={css({ fontWeight: "medium", fontSize: "sm" })}>
+        {title}
+      </span>
       {getStatusBadge(state)}
     </div>
-    <ChevronDownIcon className="size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-  </CollapsibleTrigger>
+    <ChevronDownIcon
+      className={css({
+        width: "4",
+        height: "4",
+        color: "muted.foreground",
+        transitionProperty: "transform",
+        transitionDuration: "200ms",
+        _groupDataOpen: {
+          transform: "rotate(180deg)",
+        },
+      })}
+    />
+  </Collapsible.Trigger>
 );
 
-export type SandboxContentProps = ComponentProps<typeof CollapsibleContent>;
+export type SandboxContentProps = ComponentProps<typeof Collapsible.Content>;
 
 export const SandboxContent = ({
   className,
   ...props
 }: SandboxContentProps) => (
-  <CollapsibleContent
-    className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
-      className
+  <Collapsible.Content
+    className={css(
+      {
+        outline: "none",
+      },
+      className,
     )}
     {...props}
   />
 );
 
-export type SandboxTabsProps = ComponentProps<typeof Tabs>;
+export type SandboxTabsProps = ComponentProps<typeof Tabs.Root>;
 
 export const SandboxTabs = ({ className, ...props }: SandboxTabsProps) => (
-  <Tabs className={cn("w-full gap-0", className)} {...props} />
+  <Tabs.Root
+    className={css({ width: "full", gap: "0" }, className)}
+    {...props}
+  />
 );
 
 export type SandboxTabsBarProps = ComponentProps<"div">;
@@ -87,46 +111,83 @@ export const SandboxTabsBar = ({
   ...props
 }: SandboxTabsBarProps) => (
   <div
-    className={cn(
-      "flex w-full items-center border-border border-t border-b",
-      className
+    className={css(
+      {
+        display: "flex",
+        width: "full",
+        alignItems: "center",
+        borderBottomWidth: "1px",
+        borderTopWidth: "1px",
+        borderColor: "border",
+      },
+      className,
     )}
     {...props}
   />
 );
 
-export type SandboxTabsListProps = ComponentProps<typeof TabsList>;
+export type SandboxTabsListProps = ComponentProps<typeof Tabs.List>;
 
 export const SandboxTabsList = ({
   className,
   ...props
 }: SandboxTabsListProps) => (
-  <TabsList
-    className={cn("h-auto rounded-none border-0 bg-transparent p-0", className)}
-    {...props}
-  />
-);
-
-export type SandboxTabsTriggerProps = ComponentProps<typeof TabsTrigger>;
-
-export const SandboxTabsTrigger = ({
-  className,
-  ...props
-}: SandboxTabsTriggerProps) => (
-  <TabsTrigger
-    className={cn(
-      "rounded-none border-0 border-transparent border-b-2 px-4 py-2 font-medium text-muted-foreground text-sm transition-colors data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none",
-      className
+  <Tabs.List
+    className={css(
+      {
+        height: "auto",
+        borderRadius: "none",
+        borderWidth: "0",
+        backgroundColor: "transparent",
+        padding: "0",
+      },
+      className,
     )}
     {...props}
   />
 );
 
-export type SandboxTabContentProps = ComponentProps<typeof TabsContent>;
+export type SandboxTabsTriggerProps = ComponentProps<typeof Tabs.Trigger>;
+
+export const SandboxTabsTrigger = ({
+  className,
+  ...props
+}: SandboxTabsTriggerProps) => (
+  <Tabs.Trigger
+    className={css(
+      {
+        borderRadius: "none",
+        borderWidth: "0",
+        borderBottomWidth: "2px",
+        borderColor: "transparent",
+        paddingX: "4",
+        paddingY: "2",
+        fontWeight: "medium",
+        color: "muted.foreground",
+        fontSize: "sm",
+        transitionProperty: "colors",
+        transitionDuration: "200ms",
+        _dataActive: {
+          borderColor: "primary",
+          backgroundColor: "transparent",
+          color: "foreground",
+          boxShadow: "none",
+        },
+      },
+      className,
+    )}
+    {...props}
+  />
+);
+
+export type SandboxTabContentProps = ComponentProps<typeof Tabs.Content>;
 
 export const SandboxTabContent = ({
   className,
   ...props
 }: SandboxTabContentProps) => (
-  <TabsContent className={cn("mt-0 text-sm", className)} {...props} />
+  <Tabs.Content
+    className={css({ marginTop: "0", fontSize: "sm" }, className)}
+    {...props}
+  />
 );

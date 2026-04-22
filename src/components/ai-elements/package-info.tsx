@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import { ArrowRightIcon, MinusIcon, PackageIcon, PlusIcon } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { createContext, useContext, useMemo } from "react";
@@ -27,7 +27,15 @@ export const PackageInfoHeader = ({
   ...props
 }: PackageInfoHeaderProps) => (
   <div
-    className={cn("flex items-center justify-between gap-2", className)}
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "2",
+      },
+      className,
+    )}
     {...props}
   >
     {children}
@@ -44,34 +52,87 @@ export const PackageInfoName = ({
   const { name } = useContext(PackageInfoContext);
 
   return (
-    <div className={cn("flex items-center gap-2", className)} {...props}>
-      <PackageIcon className="size-4 text-muted-foreground" />
-      <span className="font-medium font-mono text-sm">{children ?? name}</span>
+    <div
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        },
+        className,
+      )}
+      {...props}
+    >
+      <PackageIcon
+        className={css({ width: "4", height: "4", color: "muted.foreground" })}
+      />
+      <span
+        className={css({
+          fontWeight: "medium",
+          fontFamily: "mono",
+          fontSize: "sm",
+        })}
+      >
+        {children ?? name}
+      </span>
     </div>
   );
 };
 
-const changeTypeStyles: Record<ChangeType, string> = {
-  added: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  major: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  minor:
-    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  patch: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  removed: "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400",
+const changeTypeStyles: Record<ChangeType, ReturnType<typeof css>> = {
+  added: css({
+    backgroundColor: "blue.100",
+    color: "blue.700",
+    _dark: {
+      backgroundColor: "blue.900 / 0.3",
+      color: "blue.400",
+    },
+  }),
+  major: css({
+    backgroundColor: "red.100",
+    color: "red.700",
+    _dark: {
+      backgroundColor: "red.900 / 0.3",
+      color: "red.400",
+    },
+  }),
+  minor: css({
+    backgroundColor: "yellow.100",
+    color: "yellow.700",
+    _dark: {
+      backgroundColor: "yellow.900 / 0.3",
+      color: "yellow.400",
+    },
+  }),
+  patch: css({
+    backgroundColor: "green.100",
+    color: "green.700",
+    _dark: {
+      backgroundColor: "green.900 / 0.3",
+      color: "green.400",
+    },
+  }),
+  removed: css({
+    backgroundColor: "gray.100",
+    color: "gray.700",
+    _dark: {
+      backgroundColor: "gray.900 / 0.3",
+      color: "gray.400",
+    },
+  }),
 };
 
 const changeTypeIcons: Record<ChangeType, React.ReactNode> = {
-  added: <PlusIcon className="size-3" />,
-  major: <ArrowRightIcon className="size-3" />,
-  minor: <ArrowRightIcon className="size-3" />,
-  patch: <ArrowRightIcon className="size-3" />,
-  removed: <MinusIcon className="size-3" />,
+  added: <PlusIcon className={css({ width: "3", height: "3" })} />,
+  major: <ArrowRightIcon className={css({ width: "3", height: "3" })} />,
+  minor: <ArrowRightIcon className={css({ width: "3", height: "3" })} />,
+  patch: <ArrowRightIcon className={css({ width: "3", height: "3" })} />,
+  removed: <MinusIcon className={css({ width: "3", height: "3" })} />,
 };
 
 export type PackageInfoChangeTypeProps = HTMLAttributes<HTMLDivElement>;
 
 export const PackageInfoChangeType = ({
-  className,
   children,
   ...props
 }: PackageInfoChangeTypeProps) => {
@@ -83,12 +144,14 @@ export const PackageInfoChangeType = ({
 
   return (
     <Badge
-      className={cn(
-        "gap-1 text-xs capitalize",
+      className={css(
+        {
+          gap: "1",
+          fontSize: "xs",
+          textTransform: "capitalize",
+        },
         changeTypeStyles[changeType],
-        className
       )}
-      variant="secondary"
       {...props}
     >
       {changeTypeIcons[changeType]}
@@ -112,9 +175,17 @@ export const PackageInfoVersion = ({
 
   return (
     <div
-      className={cn(
-        "mt-2 flex items-center gap-2 font-mono text-muted-foreground text-sm",
-        className
+      className={css(
+        {
+          marginTop: "2",
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+          fontFamily: "mono",
+          color: "muted.foreground",
+          fontSize: "sm",
+        },
+        className,
       )}
       {...props}
     >
@@ -122,10 +193,14 @@ export const PackageInfoVersion = ({
         <>
           {currentVersion && <span>{currentVersion}</span>}
           {currentVersion && newVersion && (
-            <ArrowRightIcon className="size-3" />
+            <ArrowRightIcon className={css({ width: "3", height: "3" })} />
           )}
           {newVersion && (
-            <span className="font-medium text-foreground">{newVersion}</span>
+            <span
+              className={css({ fontWeight: "medium", color: "foreground" })}
+            >
+              {newVersion}
+            </span>
           )}
         </>
       )}
@@ -151,13 +226,21 @@ export const PackageInfo = ({
 }: PackageInfoProps) => {
   const contextValue = useMemo(
     () => ({ changeType, currentVersion, name, newVersion }),
-    [changeType, currentVersion, name, newVersion]
+    [changeType, currentVersion, name, newVersion],
   );
 
   return (
     <PackageInfoContext.Provider value={contextValue}>
       <div
-        className={cn("rounded-lg border bg-background p-4", className)}
+        className={css(
+          {
+            borderRadius: "lg",
+            borderWidth: "1px",
+            backgroundColor: "background",
+            padding: "4",
+          },
+          className,
+        )}
         {...props}
       >
         {children ?? (
@@ -181,7 +264,17 @@ export const PackageInfoDescription = ({
   children,
   ...props
 }: PackageInfoDescriptionProps) => (
-  <p className={cn("mt-2 text-muted-foreground text-sm", className)} {...props}>
+  <p
+    className={css(
+      {
+        marginTop: "2",
+        color: "muted.foreground",
+        fontSize: "sm",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </p>
 );
@@ -193,7 +286,17 @@ export const PackageInfoContent = ({
   children,
   ...props
 }: PackageInfoContentProps) => (
-  <div className={cn("mt-3 border-t pt-3", className)} {...props}>
+  <div
+    className={css(
+      {
+        marginTop: "3",
+        borderTopWidth: "1px",
+        paddingTop: "3",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -205,11 +308,37 @@ export const PackageInfoDependencies = ({
   children,
   ...props
 }: PackageInfoDependenciesProps) => (
-  <div className={cn("space-y-2", className)} {...props}>
-    <span className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+  <div
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2",
+      },
+      className,
+    )}
+    {...props}
+  >
+    <span
+      className={css({
+        fontWeight: "medium",
+        color: "muted.foreground",
+        fontSize: "xs",
+        textTransform: "uppercase",
+        letterSpacing: "wide",
+      })}
+    >
       Dependencies
     </span>
-    <div className="space-y-1">{children}</div>
+    <div
+      className={css({
+        display: "flex",
+        flexDirection: "column",
+        gap: "1",
+      })}
+    >
+      {children}
+    </div>
   </div>
 );
 
@@ -226,13 +355,29 @@ export const PackageInfoDependency = ({
   ...props
 }: PackageInfoDependencyProps) => (
   <div
-    className={cn("flex items-center justify-between text-sm", className)}
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        fontSize: "sm",
+      },
+      className,
+    )}
     {...props}
   >
     {children ?? (
       <>
-        <span className="font-mono text-muted-foreground">{name}</span>
-        {version && <span className="font-mono text-xs">{version}</span>}
+        <span
+          className={css({ fontFamily: "mono", color: "muted.foreground" })}
+        >
+          {name}
+        </span>
+        {version && (
+          <span className={css({ fontFamily: "mono", fontSize: "xs" })}>
+            {version}
+          </span>
+        )}
       </>
     )}
   </div>

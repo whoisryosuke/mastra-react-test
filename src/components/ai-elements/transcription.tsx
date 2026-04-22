@@ -1,7 +1,7 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import type { Experimental_TranscriptionResult as TranscriptionResult } from "ai";
 import type { ComponentProps, ReactNode } from "react";
 import { createContext, useCallback, useContext, useMemo } from "react";
@@ -16,14 +16,14 @@ interface TranscriptionContextValue {
 }
 
 const TranscriptionContext = createContext<TranscriptionContextValue | null>(
-  null
+  null,
 );
 
 const useTranscription = () => {
   const context = useContext(TranscriptionContext);
   if (!context) {
     throw new Error(
-      "Transcription components must be used within Transcription"
+      "Transcription components must be used within Transcription",
     );
   }
   return context;
@@ -52,15 +52,21 @@ export const Transcription = ({
 
   const contextValue = useMemo(
     () => ({ currentTime, onSeek, onTimeUpdate: setCurrentTime, segments }),
-    [currentTime, onSeek, setCurrentTime, segments]
+    [currentTime, onSeek, setCurrentTime, segments],
   );
 
   return (
     <TranscriptionContext.Provider value={contextValue}>
       <div
-        className={cn(
-          "flex flex-wrap gap-1 text-sm leading-relaxed",
-          className
+        className={css(
+          {
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "1",
+            fontSize: "sm",
+            lineHeight: "relaxed",
+          },
+          className,
         )}
         data-slot="transcription"
         {...props}
@@ -98,19 +104,22 @@ export const TranscriptionSegment = ({
       }
       onClick?.(event);
     },
-    [onSeek, segment.startSecond, onClick]
+    [onSeek, segment.startSecond, onClick],
   );
 
   return (
     <button
-      className={cn(
-        "inline text-left",
-        isActive && "text-primary",
-        isPast && "text-muted-foreground",
-        !(isActive || isPast) && "text-muted-foreground/60",
-        onSeek && "cursor-pointer hover:text-foreground",
-        !onSeek && "cursor-default",
-        className
+      className={css(
+        {
+          display: "inline",
+          textAlign: "left",
+        },
+        isActive && { color: "primary" },
+        isPast && { color: "muted.foreground" },
+        !(isActive || isPast) && { color: "muted.foreground / 0.6" },
+        onSeek && { cursor: "pointer", _hover: { color: "foreground" } },
+        !onSeek && { cursor: "default" },
+        className,
       )}
       data-active={isActive}
       data-index={index}

@@ -6,8 +6,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import * as Progress from "@/components/ui/progress";
+import { css } from "styled-system/css";
 import type { LanguageModelUsage } from "ai";
 import type { ComponentProps } from "react";
 import { createContext, useContext, useMemo } from "react";
@@ -51,7 +51,7 @@ export const Context = ({
 }: ContextProps) => {
   const contextValue = useMemo(
     () => ({ maxTokens, modelId, usage, usedTokens }),
-    [maxTokens, modelId, usage, usedTokens]
+    [maxTokens, modelId, usage, usedTokens],
   );
 
   return (
@@ -115,8 +115,13 @@ export const ContextTrigger = ({ children, ...props }: ContextTriggerProps) => {
   return (
     <HoverCardTrigger asChild>
       {children ?? (
-        <Button type="button" variant="ghost" {...props}>
-          <span className="font-medium text-muted-foreground">
+        <Button type="button" variant="plain" {...props}>
+          <span
+            className={css({
+              fontWeight: "medium",
+              color: "fg.muted",
+            })}
+          >
             {renderedPercent}
           </span>
           <ContextIcon />
@@ -133,7 +138,15 @@ export const ContextContent = ({
   ...props
 }: ContextContentProps) => (
   <HoverCardContent
-    className={cn("min-w-60 divide-y overflow-hidden p-0", className)}
+    className={css(
+      {
+        minWidth: "15rem",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -159,17 +172,53 @@ export const ContextContentHeader = ({
   }).format(maxTokens);
 
   return (
-    <div className={cn("w-full space-y-2 p-3", className)} {...props}>
+    <div
+      className={css(
+        {
+          width: "full",
+          display: "flex",
+          flexDirection: "column",
+          gap: "2",
+          padding: "3",
+        },
+        className,
+      )}
+      {...props}
+    >
       {children ?? (
         <>
-          <div className="flex items-center justify-between gap-3 text-xs">
+          <div
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "3",
+              fontSize: "xs",
+            })}
+          >
             <p>{displayPct}</p>
-            <p className="font-mono text-muted-foreground">
+            <p
+              className={css({
+                fontFamily: "mono",
+                color: "fg.muted",
+              })}
+            >
               {used} / {total}
             </p>
           </div>
-          <div className="space-y-2">
-            <Progress className="bg-muted" value={usedPercent * PERCENT_MAX} />
+          <div
+            className={css({
+              display: "flex",
+              flexDirection: "column",
+              gap: "2",
+            })}
+          >
+            <Progress.Root
+              className={css({
+                backgroundColor: "bg.subtle",
+              })}
+              value={usedPercent * PERCENT_MAX}
+            />
           </div>
         </>
       )}
@@ -184,7 +233,16 @@ export const ContextContentBody = ({
   className,
   ...props
 }: ContextContentBodyProps) => (
-  <div className={cn("w-full p-3", className)} {...props}>
+  <div
+    className={css(
+      {
+        width: "full",
+        padding: "3",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -213,15 +271,30 @@ export const ContextContentFooter = ({
 
   return (
     <div
-      className={cn(
-        "flex w-full items-center justify-between gap-3 bg-secondary p-3 text-xs",
-        className
+      className={css(
+        {
+          display: "flex",
+          width: "full",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "3",
+          backgroundColor: "bg.subtle",
+          padding: "3",
+          fontSize: "xs",
+        },
+        className,
       )}
       {...props}
     >
       {children ?? (
         <>
-          <span className="text-muted-foreground">Total cost</span>
+          <span
+            className={css({
+              color: "fg.muted",
+            })}
+          >
+            Total cost
+          </span>
           <span>{totalCost}</span>
         </>
       )}
@@ -243,7 +316,14 @@ const TokensWithCost = ({
           notation: "compact",
         }).format(tokens)}
     {costText ? (
-      <span className="ml-2 text-muted-foreground">• {costText}</span>
+      <span
+        className={css({
+          marginLeft: "0.5rem",
+          color: "fg.muted",
+        })}
+      >
+        • {costText}
+      </span>
     ) : null}
   </span>
 );
@@ -279,10 +359,24 @@ export const ContextInputUsage = ({
 
   return (
     <div
-      className={cn("flex items-center justify-between text-xs", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "xs",
+        },
+        className,
+      )}
       {...props}
     >
-      <span className="text-muted-foreground">Input</span>
+      <span
+        className={css({
+          color: "fg.muted",
+        })}
+      >
+        Input
+      </span>
       <TokensWithCost costText={inputCostText} tokens={inputTokens} />
     </div>
   );
@@ -319,10 +413,24 @@ export const ContextOutputUsage = ({
 
   return (
     <div
-      className={cn("flex items-center justify-between text-xs", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "xs",
+        },
+        className,
+      )}
       {...props}
     >
-      <span className="text-muted-foreground">Output</span>
+      <span
+        className={css({
+          color: "fg.muted",
+        })}
+      >
+        Output
+      </span>
       <TokensWithCost costText={outputCostText} tokens={outputTokens} />
     </div>
   );
@@ -359,10 +467,24 @@ export const ContextReasoningUsage = ({
 
   return (
     <div
-      className={cn("flex items-center justify-between text-xs", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "xs",
+        },
+        className,
+      )}
       {...props}
     >
-      <span className="text-muted-foreground">Reasoning</span>
+      <span
+        className={css({
+          color: "fg.muted",
+        })}
+      >
+        Reasoning
+      </span>
       <TokensWithCost costText={reasoningCostText} tokens={reasoningTokens} />
     </div>
   );
@@ -399,10 +521,24 @@ export const ContextCacheUsage = ({
 
   return (
     <div
-      className={cn("flex items-center justify-between text-xs", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "xs",
+        },
+        className,
+      )}
       {...props}
     >
-      <span className="text-muted-foreground">Cache</span>
+      <span
+        className={css({
+          color: "fg.muted",
+        })}
+      >
+        Cache
+      </span>
       <TokensWithCost costText={cacheCostText} tokens={cacheTokens} />
     </div>
   );

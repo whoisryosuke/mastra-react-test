@@ -1,13 +1,12 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+  Root as Avatar,
+  Fallback as AvatarFallback,
+} from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import {
   CheckIcon,
   CopyIcon,
@@ -19,34 +18,55 @@ import {
 import type { ComponentProps, HTMLAttributes } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type CommitProps = ComponentProps<typeof Collapsible>;
+export type CommitProps = ComponentProps<typeof Collapsible.Root>;
 
 export const Commit = ({ className, children, ...props }: CommitProps) => (
-  <Collapsible
-    className={cn("rounded-lg border bg-background", className)}
+  <Collapsible.Root
+    className={css(
+      {
+        borderRadius: "l2",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "border",
+        backgroundColor: "bg.default",
+      },
+      className,
+    )}
     {...props}
   >
     {children}
-  </Collapsible>
+  </Collapsible.Root>
 );
 
-export type CommitHeaderProps = ComponentProps<typeof CollapsibleTrigger>;
+export type CommitHeaderProps = ComponentProps<typeof Collapsible.Trigger>;
 
 export const CommitHeader = ({
   className,
   children,
   ...props
 }: CommitHeaderProps) => (
-  <CollapsibleTrigger asChild {...props}>
+  <Collapsible.Trigger asChild {...props}>
     <div
-      className={cn(
-        "group flex cursor-pointer items-center justify-between gap-4 p-3 text-left transition-colors hover:opacity-80",
-        className
+      className={css(
+        {
+          display: "flex",
+          cursor: "pointer",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "4",
+          padding: "3",
+          textAlign: "left",
+          transition: "colors",
+          _hover: {
+            opacity: 0.8,
+          },
+        },
+        className,
       )}
     >
       {children}
     </div>
-  </CollapsibleTrigger>
+  </Collapsible.Trigger>
 );
 
 export type CommitHashProps = HTMLAttributes<HTMLSpanElement>;
@@ -56,8 +76,24 @@ export const CommitHash = ({
   children,
   ...props
 }: CommitHashProps) => (
-  <span className={cn("font-mono text-xs", className)} {...props}>
-    <GitCommitIcon className="mr-1 inline-block size-3" />
+  <span
+    className={css(
+      {
+        fontFamily: "mono",
+        fontSize: "xs",
+      },
+      className,
+    )}
+    {...props}
+  >
+    <GitCommitIcon
+      className={css({
+        marginRight: "0.25rem",
+        display: "inline-block",
+        width: "3",
+        height: "3",
+      })}
+    />
     {children}
   </span>
 );
@@ -69,7 +105,16 @@ export const CommitMessage = ({
   children,
   ...props
 }: CommitMessageProps) => (
-  <span className={cn("font-medium text-sm", className)} {...props}>
+  <span
+    className={css(
+      {
+        fontWeight: "medium",
+        fontSize: "sm",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </span>
 );
@@ -82,9 +127,15 @@ export const CommitMetadata = ({
   ...props
 }: CommitMetadataProps) => (
   <div
-    className={cn(
-      "flex items-center gap-2 text-muted-foreground text-xs",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "2",
+        color: "fg.muted",
+        fontSize: "xs",
+      },
+      className,
     )}
     {...props}
   >
@@ -111,7 +162,17 @@ export const CommitInfo = ({
   children,
   ...props
 }: CommitInfoProps) => (
-  <div className={cn("flex flex-1 flex-col", className)} {...props}>
+  <div
+    className={css(
+      {
+        display: "flex",
+        flex: "1",
+        flexDirection: "column",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -123,7 +184,16 @@ export const CommitAuthor = ({
   children,
   ...props
 }: CommitAuthorProps) => (
-  <div className={cn("flex items-center", className)} {...props}>
+  <div
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -137,8 +207,23 @@ export const CommitAuthorAvatar = ({
   className,
   ...props
 }: CommitAuthorAvatarProps) => (
-  <Avatar className={cn("size-8", className)} {...props}>
-    <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+  <Avatar
+    className={css(
+      {
+        width: "2rem",
+        height: "2rem",
+      },
+      className,
+    )}
+    {...props}
+  >
+    <AvatarFallback
+      className={css({
+        fontSize: "xs",
+      })}
+    >
+      {initials}
+    </AvatarFallback>
   </Avatar>
 );
 
@@ -152,7 +237,7 @@ const relativeTimeFormat = new Intl.RelativeTimeFormat("en", {
 
 const formatRelativeDate = (date: Date) => {
   const days = Math.round(
-    (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    (date.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
   );
   return relativeTimeFormat.format(days, "day");
 };
@@ -175,7 +260,12 @@ export const CommitTimestamp = ({
 
   return (
     <time
-      className={cn("text-xs", className)}
+      className={css(
+        {
+          fontSize: "xs",
+        },
+        className,
+      )}
       dateTime={date.toISOString()}
       {...props}
     >
@@ -195,7 +285,14 @@ export const CommitActions = ({
   ...props
 }: CommitActionsProps) => (
   <div
-    className={cn("flex items-center gap-1", className)}
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "1",
+      },
+      className,
+    )}
     onClick={handleActionsClick}
     onKeyDown={handleActionsKeyDown}
     role="group"
@@ -237,7 +334,7 @@ export const CommitCopyButton = ({
         onCopy?.();
         timeoutRef.current = window.setTimeout(
           () => setIsCopied(false),
-          timeout
+          timeout,
         );
       }
     } catch (error) {
@@ -249,34 +346,52 @@ export const CommitCopyButton = ({
     () => () => {
       window.clearTimeout(timeoutRef.current);
     },
-    []
+    [],
   );
 
   const Icon = isCopied ? CheckIcon : CopyIcon;
 
   return (
     <Button
-      className={cn("size-7 shrink-0", className)}
+      className={css(
+        {
+          width: "7",
+          height: "7",
+          flexShrink: "0",
+        },
+        className,
+      )}
       onClick={copyToClipboard}
-      size="icon"
-      variant="ghost"
+      size="sm"
+      variant="plain"
       {...props}
     >
-      {children ?? <Icon size={14} />}
+      {children ?? <Icon style={{ width: 14, height: 14 }} />}
     </Button>
   );
 };
 
-export type CommitContentProps = ComponentProps<typeof CollapsibleContent>;
+export type CommitContentProps = ComponentProps<typeof Collapsible.Content>;
 
 export const CommitContent = ({
   className,
   children,
   ...props
 }: CommitContentProps) => (
-  <CollapsibleContent className={cn("border-t p-3", className)} {...props}>
+  <Collapsible.Content
+    className={css(
+      {
+        borderTopWidth: "1px",
+        borderTopStyle: "solid",
+        borderTopColor: "border",
+        padding: "3",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
-  </CollapsibleContent>
+  </Collapsible.Content>
 );
 
 export type CommitFilesProps = HTMLAttributes<HTMLDivElement>;
@@ -286,7 +401,17 @@ export const CommitFiles = ({
   children,
   ...props
 }: CommitFilesProps) => (
-  <div className={cn("space-y-1", className)} {...props}>
+  <div
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -299,9 +424,21 @@ export const CommitFile = ({
   ...props
 }: CommitFileProps) => (
   <div
-    className={cn(
-      "flex items-center justify-between gap-2 rounded px-2 py-1 text-sm hover:bg-muted/50",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "2",
+        borderRadius: "l2",
+        paddingX: "2",
+        paddingY: "1",
+        fontSize: "sm",
+        _hover: {
+          backgroundColor: "bg.subtle",
+        },
+      },
+      className,
     )}
     {...props}
   >
@@ -316,16 +453,27 @@ export const CommitFileInfo = ({
   children,
   ...props
 }: CommitFileInfoProps) => (
-  <div className={cn("flex min-w-0 items-center gap-2", className)} {...props}>
+  <div
+    className={css(
+      {
+        display: "flex",
+        minWidth: "0",
+        alignItems: "center",
+        gap: "2",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
 
 const fileStatusStyles = {
-  added: "text-green-600 dark:text-green-400",
-  deleted: "text-red-600 dark:text-red-400",
-  modified: "text-yellow-600 dark:text-yellow-400",
-  renamed: "text-blue-600 dark:text-blue-400",
+  added: css({ color: "green.6", _dark: { color: "green.4" } }),
+  deleted: css({ color: "red.6", _dark: { color: "red.4" } }),
+  modified: css({ color: "yellow.6", _dark: { color: "yellow.4" } }),
+  renamed: css({ color: "blue.6", _dark: { color: "blue.4" } }),
 };
 
 const fileStatusLabels = {
@@ -346,10 +494,14 @@ export const CommitFileStatus = ({
   ...props
 }: CommitFileStatusProps) => (
   <span
-    className={cn(
-      "font-medium font-mono text-xs",
+    className={css(
+      {
+        fontWeight: "medium",
+        fontFamily: "mono",
+        fontSize: "xs",
+      },
       fileStatusStyles[status],
-      className
+      className,
     )}
     {...props}
   >
@@ -364,7 +516,15 @@ export const CommitFileIcon = ({
   ...props
 }: CommitFileIconProps) => (
   <FileIcon
-    className={cn("size-3.5 shrink-0 text-muted-foreground", className)}
+    className={css(
+      {
+        width: "3.5",
+        height: "3.5",
+        flexShrink: "0",
+        color: "fg.muted",
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -376,7 +536,19 @@ export const CommitFilePath = ({
   children,
   ...props
 }: CommitFilePathProps) => (
-  <span className={cn("truncate font-mono text-xs", className)} {...props}>
+  <span
+    className={css(
+      {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        fontFamily: "mono",
+        fontSize: "xs",
+      },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </span>
 );
@@ -389,9 +561,16 @@ export const CommitFileChanges = ({
   ...props
 }: CommitFileChangesProps) => (
   <div
-    className={cn(
-      "flex shrink-0 items-center gap-1 font-mono text-xs",
-      className
+    className={css(
+      {
+        flexShrink: "0",
+        display: "flex",
+        alignItems: "center",
+        gap: "1",
+        fontFamily: "mono",
+        fontSize: "xs",
+      },
+      className,
     )}
     {...props}
   >
@@ -415,12 +594,24 @@ export const CommitFileAdditions = ({
 
   return (
     <span
-      className={cn("text-green-600 dark:text-green-400", className)}
+      className={css(
+        {
+          color: "green.6",
+          _dark: { color: "green.4" },
+        },
+        className,
+      )}
       {...props}
     >
       {children ?? (
         <>
-          <PlusIcon className="inline-block size-3" />
+          <PlusIcon
+            className={css({
+              display: "inline-block",
+              width: "3",
+              height: "3",
+            })}
+          />
           {count}
         </>
       )}
@@ -444,12 +635,24 @@ export const CommitFileDeletions = ({
 
   return (
     <span
-      className={cn("text-red-600 dark:text-red-400", className)}
+      className={css(
+        {
+          color: "red.6",
+          _dark: { color: "red.4" },
+        },
+        className,
+      )}
       {...props}
     >
       {children ?? (
         <>
-          <MinusIcon className="inline-block size-3" />
+          <MinusIcon
+            className={css({
+              display: "inline-block",
+              width: "3",
+              height: "3",
+            })}
+          />
           {count}
         </>
       )}

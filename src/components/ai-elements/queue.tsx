@@ -1,13 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { Root as ScrollArea } from "@/components/ui/scroll-area";
+import { css } from "styled-system/css";
 import { ChevronDownIcon, PaperclipIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
@@ -35,9 +31,22 @@ export type QueueItemProps = ComponentProps<"li">;
 
 export const QueueItem = ({ className, ...props }: QueueItemProps) => (
   <li
-    className={cn(
-      "group flex flex-col gap-1 rounded-md px-3 py-1 text-sm transition-colors hover:bg-muted",
-      className
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1",
+        borderRadius: "md",
+        paddingX: "3",
+        paddingY: "1",
+        fontSize: "sm",
+        transitionProperty: "colors",
+        transitionDuration: "200ms",
+        _hover: {
+          backgroundColor: "muted",
+        },
+      },
+      className,
     )}
     {...props}
   />
@@ -53,12 +62,22 @@ export const QueueItemIndicator = ({
   ...props
 }: QueueItemIndicatorProps) => (
   <span
-    className={cn(
-      "mt-0.5 inline-block size-2.5 rounded-full border",
+    className={css(
+      {
+        marginTop: "0.5",
+        display: "inline-block",
+        width: "2.5",
+        height: "2.5",
+        borderRadius: "full",
+        borderWidth: "1px",
+      },
       completed
-        ? "border-muted-foreground/20 bg-muted-foreground/10"
-        : "border-muted-foreground/50",
-      className
+        ? {
+            borderColor: "muted.foreground / 0.2",
+            backgroundColor: "muted.foreground / 0.1",
+          }
+        : { borderColor: "muted.foreground / 0.5" },
+      className,
     )}
     {...props}
   />
@@ -74,12 +93,19 @@ export const QueueItemContent = ({
   ...props
 }: QueueItemContentProps) => (
   <span
-    className={cn(
-      "line-clamp-1 grow break-words",
+    className={css(
+      {
+        lineClamp: "1",
+        flexGrow: "1",
+        wordBreak: "break-words",
+      },
       completed
-        ? "text-muted-foreground/50 line-through"
-        : "text-muted-foreground",
-      className
+        ? {
+            color: "muted.foreground / 0.5",
+            textDecorationLine: "line-through",
+          }
+        : { color: "muted.foreground" },
+      className,
     )}
     {...props}
   />
@@ -95,12 +121,18 @@ export const QueueItemDescription = ({
   ...props
 }: QueueItemDescriptionProps) => (
   <div
-    className={cn(
-      "ml-6 text-xs",
+    className={css(
+      {
+        marginLeft: "6",
+        fontSize: "xs",
+      },
       completed
-        ? "text-muted-foreground/40 line-through"
-        : "text-muted-foreground",
-      className
+        ? {
+            color: "muted.foreground / 0.4",
+            textDecorationLine: "line-through",
+          }
+        : { color: "muted.foreground" },
+      className,
     )}
     {...props}
   />
@@ -112,7 +144,7 @@ export const QueueItemActions = ({
   className,
   ...props
 }: QueueItemActionsProps) => (
-  <div className={cn("flex gap-1", className)} {...props} />
+  <div className={css({ display: "flex", gap: "1" }, className)} {...props} />
 );
 
 export type QueueItemActionProps = Omit<
@@ -125,13 +157,29 @@ export const QueueItemAction = ({
   ...props
 }: QueueItemActionProps) => (
   <Button
-    className={cn(
-      "size-auto rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-muted-foreground/10 hover:text-foreground group-hover:opacity-100",
-      className
+    className={css(
+      {
+        width: "auto",
+        height: "auto",
+        padding: "1",
+        borderRadius: "sm",
+        color: "muted.foreground",
+        opacity: "0",
+        transitionProperty: "opacity",
+        transitionDuration: "200ms",
+        _hover: {
+          backgroundColor: "muted.foreground / 0.1",
+          color: "foreground",
+        },
+        _groupHover: {
+          opacity: "100",
+        },
+      },
+      className,
     )}
-    size="icon"
+    size="xs"
     type="button"
-    variant="ghost"
+    variant="plain"
     {...props}
   />
 );
@@ -142,7 +190,18 @@ export const QueueItemAttachment = ({
   className,
   ...props
 }: QueueItemAttachmentProps) => (
-  <div className={cn("mt-1 flex flex-wrap gap-2", className)} {...props} />
+  <div
+    className={css(
+      {
+        marginTop: "1",
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "2",
+      },
+      className,
+    )}
+    {...props}
+  />
 );
 
 export type QueueItemImageProps = ComponentProps<"img">;
@@ -153,7 +212,16 @@ export const QueueItemImage = ({
 }: QueueItemImageProps) => (
   <img
     alt=""
-    className={cn("h-8 w-8 rounded border object-cover", className)}
+    className={css(
+      {
+        height: "8",
+        width: "8",
+        borderRadius: "sm",
+        borderWidth: "1px",
+        objectFit: "cover",
+      },
+      className,
+    )}
     height={32}
     width={32}
     {...props}
@@ -168,14 +236,33 @@ export const QueueItemFile = ({
   ...props
 }: QueueItemFileProps) => (
   <span
-    className={cn(
-      "flex items-center gap-1 rounded border bg-muted px-2 py-1 text-xs",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "1",
+        borderRadius: "sm",
+        borderWidth: "1px",
+        backgroundColor: "muted",
+        paddingX: "2",
+        paddingY: "1",
+        fontSize: "xs",
+      },
+      className,
     )}
     {...props}
   >
     <PaperclipIcon size={12} />
-    <span className="max-w-[100px] truncate">{children}</span>
+    <span
+      className={css({
+        maxWidth: "100px",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      })}
+    >
+      {children}
+    </span>
   </span>
 );
 
@@ -186,22 +273,29 @@ export const QueueList = ({
   className,
   ...props
 }: QueueListProps) => (
-  <ScrollArea className={cn("mt-2 -mb-1", className)} {...props}>
-    <div className="max-h-40 pr-4">
+  <ScrollArea
+    className={css({ marginTop: "2", marginBottom: "-1" }, className)}
+    {...props}
+  >
+    <div className={css({ maxHeight: "40", paddingRight: "4" })}>
       <ul>{children}</ul>
     </div>
   </ScrollArea>
 );
 
 // QueueSection - collapsible section container
-export type QueueSectionProps = ComponentProps<typeof Collapsible>;
+export type QueueSectionProps = ComponentProps<typeof Collapsible.Root>;
 
 export const QueueSection = ({
   className,
   defaultOpen = true,
   ...props
 }: QueueSectionProps) => (
-  <Collapsible className={cn(className)} defaultOpen={defaultOpen} {...props} />
+  <Collapsible.Root
+    className={className}
+    defaultOpen={defaultOpen}
+    {...props}
+  />
 );
 
 // QueueSectionTrigger - section header/trigger
@@ -212,18 +306,36 @@ export const QueueSectionTrigger = ({
   className,
   ...props
 }: QueueSectionTriggerProps) => (
-  <CollapsibleTrigger asChild>
+  <Collapsible.Trigger asChild>
     <button
-      className={cn(
-        "group flex w-full items-center justify-between rounded-md bg-muted/40 px-3 py-2 text-left font-medium text-muted-foreground text-sm transition-colors hover:bg-muted",
-        className
+      className={css(
+        {
+          display: "flex",
+          width: "full",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: "md",
+          backgroundColor: "muted / 0.4",
+          paddingX: "3",
+          paddingY: "2",
+          textAlign: "left",
+          fontWeight: "medium",
+          color: "muted.foreground",
+          fontSize: "sm",
+          transitionProperty: "colors",
+          transitionDuration: "200ms",
+          _hover: {
+            backgroundColor: "muted",
+          },
+        },
+        className,
       )}
       type="button"
       {...props}
     >
       {children}
     </button>
-  </CollapsibleTrigger>
+  </Collapsible.Trigger>
 );
 
 // QueueSectionLabel - label content with icon and count
@@ -240,8 +352,24 @@ export const QueueSectionLabel = ({
   className,
   ...props
 }: QueueSectionLabelProps) => (
-  <span className={cn("flex items-center gap-2", className)} {...props}>
-    <ChevronDownIcon className="size-4 transition-transform group-data-[state=closed]:-rotate-90" />
+  <span
+    className={css(
+      { display: "flex", alignItems: "center", gap: "2" },
+      className,
+    )}
+    {...props}
+  >
+    <ChevronDownIcon
+      className={css({
+        width: "4",
+        height: "4",
+        transitionProperty: "transform",
+        transitionDuration: "200ms",
+        _groupDataClosed: {
+          transform: "rotate(-90deg)",
+        },
+      })}
+    />
     {icon}
     <span>
       {count} {label}
@@ -251,23 +379,35 @@ export const QueueSectionLabel = ({
 
 // QueueSectionContent - collapsible content area
 export type QueueSectionContentProps = ComponentProps<
-  typeof CollapsibleContent
+  typeof Collapsible.Content
 >;
 
 export const QueueSectionContent = ({
   className,
   ...props
 }: QueueSectionContentProps) => (
-  <CollapsibleContent className={cn(className)} {...props} />
+  <Collapsible.Content className={className} {...props} />
 );
 
 export type QueueProps = ComponentProps<"div">;
 
 export const Queue = ({ className, ...props }: QueueProps) => (
   <div
-    className={cn(
-      "flex flex-col gap-2 rounded-xl border border-border bg-background px-3 pt-2 pb-2 shadow-xs",
-      className
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2",
+        borderRadius: "xl",
+        borderWidth: "1px",
+        borderColor: "border",
+        backgroundColor: "background",
+        paddingX: "3",
+        paddingTop: "2",
+        paddingBottom: "2",
+        boxShadow: "xs",
+      },
+      className,
     )}
     {...props}
   />

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import Ansi from "ansi-to-react";
 import { CheckIcon, CopyIcon, TerminalIcon, Trash2Icon } from "lucide-react";
 import type { ComponentProps, HTMLAttributes } from "react";
@@ -36,9 +36,17 @@ export const TerminalHeader = ({
   ...props
 }: TerminalHeaderProps) => (
   <div
-    className={cn(
-      "flex items-center justify-between border-zinc-800 border-b px-4 py-2",
-      className
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderBottomWidth: "1px",
+        borderColor: "zinc.800",
+        paddingX: "4",
+        paddingY: "2",
+      },
+      className,
     )}
     {...props}
   >
@@ -54,10 +62,19 @@ export const TerminalTitle = ({
   ...props
 }: TerminalTitleProps) => (
   <div
-    className={cn("flex items-center gap-2 text-sm text-zinc-400", className)}
+    className={css(
+      {
+        display: "flex",
+        alignItems: "center",
+        gap: "2",
+        fontSize: "sm",
+        color: "zinc.400",
+      },
+      className,
+    )}
     {...props}
   >
-    <TerminalIcon className="size-4" />
+    <TerminalIcon className={css({ width: "4", height: "4" })} />
     {children ?? "Terminal"}
   </div>
 );
@@ -77,7 +94,16 @@ export const TerminalStatus = ({
 
   return (
     <div
-      className={cn("flex items-center gap-2 text-xs text-zinc-400", className)}
+      className={css(
+        {
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+          fontSize: "xs",
+          color: "zinc.400",
+        },
+        className,
+      )}
       {...props}
     >
       {children}
@@ -92,7 +118,13 @@ export const TerminalActions = ({
   children,
   ...props
 }: TerminalActionsProps) => (
-  <div className={cn("flex items-center gap-1", className)} {...props}>
+  <div
+    className={css(
+      { display: "flex", alignItems: "center", gap: "1" },
+      className,
+    )}
+    {...props}
+  >
     {children}
   </div>
 );
@@ -135,20 +167,29 @@ export const TerminalCopyButton = ({
     () => () => {
       window.clearTimeout(timeoutRef.current);
     },
-    []
+    [],
   );
 
   const Icon = isCopied ? CheckIcon : CopyIcon;
 
   return (
     <Button
-      className={cn(
-        "size-7 shrink-0 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100",
-        className
+      className={css(
+        {
+          width: "7",
+          height: "7",
+          flexShrink: "0",
+          color: "zinc.400",
+          _hover: {
+            backgroundColor: "zinc.800",
+            color: "zinc.100",
+          },
+        },
+        className,
       )}
       onClick={copyToClipboard}
-      size="icon"
-      variant="ghost"
+      size="xs"
+      variant="plain"
       {...props}
     >
       {children ?? <Icon size={14} />}
@@ -171,13 +212,22 @@ export const TerminalClearButton = ({
 
   return (
     <Button
-      className={cn(
-        "size-7 shrink-0 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100",
-        className
+      className={css(
+        {
+          width: "7",
+          height: "7",
+          flexShrink: "0",
+          color: "zinc.400",
+          _hover: {
+            backgroundColor: "zinc.800",
+            color: "zinc.100",
+          },
+        },
+        className,
       )}
       onClick={onClear}
-      size="icon"
-      variant="ghost"
+      size="xs"
+      variant="plain"
       {...props}
     >
       {children ?? <Trash2Icon size={14} />}
@@ -203,18 +253,39 @@ export const TerminalContent = ({
 
   return (
     <div
-      className={cn(
-        "max-h-96 overflow-auto p-4 font-mono text-sm leading-relaxed",
-        className
+      className={css(
+        {
+          maxHeight: "96",
+          overflow: "auto",
+          padding: "4",
+          fontFamily: "mono",
+          fontSize: "sm",
+          lineHeight: "relaxed",
+        },
+        className,
       )}
       ref={containerRef}
       {...props}
     >
       {children ?? (
-        <pre className="whitespace-pre-wrap break-words">
+        <pre
+          className={css({
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+          })}
+        >
           <Ansi>{output}</Ansi>
           {isStreaming && (
-            <span className="ml-0.5 inline-block h-4 w-2 animate-pulse bg-zinc-100" />
+            <span
+              className={css({
+                marginLeft: "0.5",
+                display: "inline-block",
+                height: "4",
+                width: "2",
+                backgroundColor: "zinc.100",
+                animation: "pulse",
+              })}
+            />
           )}
         </pre>
       )}
@@ -240,15 +311,23 @@ export const Terminal = ({
 }: TerminalProps) => {
   const contextValue = useMemo(
     () => ({ autoScroll, isStreaming, onClear, output }),
-    [autoScroll, isStreaming, onClear, output]
+    [autoScroll, isStreaming, onClear, output],
   );
 
   return (
     <TerminalContext.Provider value={contextValue}>
       <div
-        className={cn(
-          "flex flex-col overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100",
-          className
+        className={css(
+          {
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            borderRadius: "lg",
+            borderWidth: "1px",
+            backgroundColor: "zinc.950",
+            color: "zinc.100",
+          },
+          className,
         )}
         {...props}
       >
@@ -256,7 +335,13 @@ export const Terminal = ({
           <>
             <TerminalHeader>
               <TerminalTitle />
-              <div className="flex items-center gap-1">
+              <div
+                className={css({
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1",
+                })}
+              >
                 <TerminalStatus />
                 <TerminalActions>
                   <TerminalCopyButton />

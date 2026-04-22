@@ -2,20 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  Root as Card,
+  Header as CardHeader,
+  Body as CardContent,
+  Footer as CardFooter,
+  Title as CardTitle,
+  Description as CardDescription,
 } from "@/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import { ChevronsUpDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { createContext, useContext, useMemo } from "react";
@@ -36,7 +31,7 @@ const usePlan = () => {
   return context;
 };
 
-export type PlanProps = ComponentProps<typeof Collapsible> & {
+export type PlanProps = ComponentProps<typeof Collapsible.Root> & {
   isStreaming?: boolean;
 };
 
@@ -50,9 +45,18 @@ export const Plan = ({
 
   return (
     <PlanContext.Provider value={contextValue}>
-      <Collapsible asChild data-slot="plan" {...props}>
-        <Card className={cn("shadow-none", className)}>{children}</Card>
-      </Collapsible>
+      <Collapsible.Root asChild data-slot="plan" {...props}>
+        <Card
+          className={css(
+            {
+              boxShadow: "none",
+            },
+            className,
+          )}
+        >
+          {children}
+        </Card>
+      </Collapsible.Root>
     </PlanContext.Provider>
   );
 };
@@ -61,7 +65,14 @@ export type PlanHeaderProps = ComponentProps<typeof CardHeader>;
 
 export const PlanHeader = ({ className, ...props }: PlanHeaderProps) => (
   <CardHeader
-    className={cn("flex items-start justify-between", className)}
+    className={css(
+      {
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+      },
+      className,
+    )}
     data-slot="plan-header"
     {...props}
   />
@@ -100,7 +111,12 @@ export const PlanDescription = ({
 
   return (
     <CardDescription
-      className={cn("text-balance", className)}
+      className={css(
+        {
+          textWrap: "balance",
+        },
+        className,
+      )}
       data-slot="plan-description"
       {...props}
     >
@@ -109,18 +125,18 @@ export const PlanDescription = ({
   );
 };
 
-export type PlanActionProps = ComponentProps<typeof CardAction>;
+export type PlanActionProps = ComponentProps<"div">;
 
 export const PlanAction = (props: PlanActionProps) => (
-  <CardAction data-slot="plan-action" {...props} />
+  <div data-slot="plan-action" {...props} />
 );
 
 export type PlanContentProps = ComponentProps<typeof CardContent>;
 
 export const PlanContent = (props: PlanContentProps) => (
-  <CollapsibleContent asChild>
+  <Collapsible.Content asChild>
     <CardContent data-slot="plan-content" {...props} />
-  </CollapsibleContent>
+  </Collapsible.Content>
 );
 
 export type PlanFooterProps = ComponentProps<"div">;
@@ -129,19 +145,25 @@ export const PlanFooter = (props: PlanFooterProps) => (
   <CardFooter data-slot="plan-footer" {...props} />
 );
 
-export type PlanTriggerProps = ComponentProps<typeof CollapsibleTrigger>;
+export type PlanTriggerProps = ComponentProps<typeof Collapsible.Trigger>;
 
 export const PlanTrigger = ({ className, ...props }: PlanTriggerProps) => (
-  <CollapsibleTrigger asChild>
+  <Collapsible.Trigger asChild>
     <Button
-      className={cn("size-8", className)}
+      className={css(
+        {
+          width: "8",
+          height: "8",
+        },
+        className,
+      )}
       data-slot="plan-trigger"
-      size="icon"
-      variant="ghost"
+      size="sm"
+      variant="plain"
       {...props}
     >
-      <ChevronsUpDownIcon className="size-4" />
-      <span className="sr-only">Toggle plan</span>
+      <ChevronsUpDownIcon className={css({ width: "4", height: "4" })} />
+      <span className={css({ display: "none" })}>Toggle plan</span>
     </Button>
-  </CollapsibleTrigger>
+  </Collapsible.Trigger>
 );

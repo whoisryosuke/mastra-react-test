@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import { AlertCircle } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import {
@@ -154,7 +154,7 @@ export const JSXPreview = memo(
 
     const processedJsx = useMemo(
       () => (isStreaming ? completeJsxTag(jsx) : jsx),
-      [jsx, isStreaming]
+      [jsx, isStreaming],
     );
 
     const contextValue = useMemo(
@@ -178,17 +178,17 @@ export const JSXPreview = memo(
         onError,
         processedJsx,
         setError,
-      ]
+      ],
     );
 
     return (
       <JSXPreviewContext.Provider value={contextValue}>
-        <div className={cn("relative", className)} {...props}>
+        <div className={css({ position: "relative" }, className)} {...props}>
           {children}
         </div>
       </JSXPreviewContext.Provider>
     );
-  }
+  },
 );
 
 JSXPreview.displayName = "JSXPreview";
@@ -233,7 +233,7 @@ export const JSXPreviewContent = memo(
         setError(err);
         onErrorProp?.(err);
       },
-      [processedJsx, isStreaming, onErrorProp, setError]
+      [processedJsx, isStreaming, onErrorProp, setError],
     );
 
     // Track the last JSX that rendered without error
@@ -249,7 +249,7 @@ export const JSXPreviewContent = memo(
       isStreaming && hadError ? lastGoodJsxRef.current : processedJsx;
 
     return (
-      <div className={cn("jsx-preview-content", className)} {...props}>
+      <div className={css({ color: "fg.default" }, className)} {...props}>
         <JsxParser
           bindings={bindings}
           components={components}
@@ -259,7 +259,7 @@ export const JSXPreviewContent = memo(
         />
       </div>
     );
-  }
+  },
 );
 
 JSXPreviewContent.displayName = "JSXPreviewContent";
@@ -270,7 +270,7 @@ export type JSXPreviewErrorProps = ComponentProps<"div"> & {
 
 const renderChildren = (
   children: ReactNode | ((error: Error) => ReactNode),
-  error: Error
+  error: Error,
 ): ReactNode => {
   if (typeof children === "function") {
     return children(error);
@@ -288,10 +288,19 @@ export const JSXPreviewError = memo(
 
     return (
       <div
-        className={cn(
-          "flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-destructive text-sm",
-          className
-        )}
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+          borderRadius: "l2",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderColor: "red.5",
+          backgroundColor: "red.1",
+          padding: "3",
+          color: "red.6",
+          fontSize: "sm",
+        })}
         {...props}
       >
         {children ? (
@@ -304,7 +313,7 @@ export const JSXPreviewError = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 JSXPreviewError.displayName = "JSXPreviewError";

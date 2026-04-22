@@ -1,12 +1,8 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import * as Collapsible from "@/components/ui/collapsible";
+import { css } from "styled-system/css";
 import { cjk } from "@streamdown/cjk";
 import { code } from "@streamdown/code";
 import { math } from "@streamdown/math";
@@ -44,7 +40,7 @@ export const useReasoning = () => {
   return context;
 };
 
-export type ReasoningProps = ComponentProps<typeof Collapsible> & {
+export type ReasoningProps = ComponentProps<typeof Collapsible.Root> & {
   isStreaming?: boolean;
   open?: boolean;
   defaultOpen?: boolean;
@@ -122,34 +118,39 @@ export const Reasoning = memo(
     }, [isStreaming, isOpen, setIsOpen, hasAutoClosed]);
 
     const handleOpenChange = useCallback(
-      (newOpen: boolean) => {
-        setIsOpen(newOpen);
+      (details: { open: boolean }) => {
+        setIsOpen(details.open);
       },
-      [setIsOpen]
+      [setIsOpen],
     );
 
     const contextValue = useMemo(
       () => ({ duration, isOpen, isStreaming, setIsOpen }),
-      [duration, isOpen, isStreaming, setIsOpen]
+      [duration, isOpen, isStreaming, setIsOpen],
     );
 
     return (
       <ReasoningContext.Provider value={contextValue}>
-        <Collapsible
-          className={cn("not-prose mb-4", className)}
+        <Collapsible.Root
+          className={css(
+            {
+              marginBottom: "4",
+            },
+            className,
+          )}
           onOpenChange={handleOpenChange}
           open={isOpen}
           {...props}
         >
           {children}
-        </Collapsible>
+        </Collapsible.Root>
       </ReasoningContext.Provider>
     );
-  }
+  },
 );
 
 export type ReasoningTriggerProps = ComponentProps<
-  typeof CollapsibleTrigger
+  typeof Collapsible.Trigger
 > & {
   getThinkingMessage?: (isStreaming: boolean, duration?: number) => ReactNode;
 };
@@ -174,32 +175,47 @@ export const ReasoningTrigger = memo(
     const { isStreaming, isOpen, duration } = useReasoning();
 
     return (
-      <CollapsibleTrigger
-        className={cn(
-          "flex w-full items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground",
-          className
+      <Collapsible.Trigger
+        className={css(
+          {
+            display: "flex",
+            width: "full",
+            alignItems: "center",
+            gap: "2",
+            color: "muted.foreground",
+            fontSize: "sm",
+            transitionProperty: "colors",
+            transitionDuration: "200ms",
+            _hover: {
+              color: "foreground",
+            },
+          },
+          className,
         )}
         {...props}
       >
         {children ?? (
           <>
-            <BrainIcon className="size-4" />
+            <BrainIcon className={css({ width: "4", height: "4" })} />
             {getThinkingMessage(isStreaming, duration)}
             <ChevronDownIcon
-              className={cn(
-                "size-4 transition-transform",
-                isOpen ? "rotate-180" : "rotate-0"
-              )}
+              className={css({
+                width: "4",
+                height: "4",
+                transitionProperty: "transform",
+                transitionDuration: "200ms",
+                transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+              })}
             />
           </>
         )}
-      </CollapsibleTrigger>
+      </Collapsible.Trigger>
     );
-  }
+  },
 );
 
 export type ReasoningContentProps = ComponentProps<
-  typeof CollapsibleContent
+  typeof Collapsible.Content
 > & {
   children: string;
 };
@@ -208,17 +224,20 @@ const streamdownPlugins = { cjk, code, math, mermaid };
 
 export const ReasoningContent = memo(
   ({ className, children, ...props }: ReasoningContentProps) => (
-    <CollapsibleContent
-      className={cn(
-        "mt-4 text-sm",
-        "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-muted-foreground outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
-        className
+    <Collapsible.Content
+      className={css(
+        {
+          marginTop: "4",
+          fontSize: "sm",
+          color: "muted.foreground",
+        },
+        className,
       )}
       {...props}
     >
       <Streamdown plugins={streamdownPlugins}>{children}</Streamdown>
-    </CollapsibleContent>
-  )
+    </Collapsible.Content>
+  ),
 );
 
 Reasoning.displayName = "Reasoning";

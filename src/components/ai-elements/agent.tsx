@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import * as Accordion from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { css } from "styled-system/css";
 import type { Tool } from "ai";
 import { BotIcon } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -19,7 +14,16 @@ export type AgentProps = ComponentProps<"div">;
 
 export const Agent = memo(({ className, ...props }: AgentProps) => (
   <div
-    className={cn("not-prose w-full rounded-md border", className)}
+    className={css(
+      {
+        width: "full",
+        borderRadius: "l2",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "border",
+      },
+      className,
+    )}
     {...props}
   />
 ));
@@ -32,31 +36,75 @@ export type AgentHeaderProps = ComponentProps<"div"> & {
 export const AgentHeader = memo(
   ({ className, name, model, ...props }: AgentHeaderProps) => (
     <div
-      className={cn(
-        "flex w-full items-center justify-between gap-4 p-3",
-        className
+      className={css(
+        {
+          display: "flex",
+          width: "full",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "4",
+          padding: "3",
+        },
+        className,
       )}
       {...props}
     >
-      <div className="flex items-center gap-2">
-        <BotIcon className="size-4 text-muted-foreground" />
-        <span className="font-medium text-sm">{name}</span>
+      <div
+        className={css({
+          display: "flex",
+          alignItems: "center",
+          gap: "2",
+        })}
+      >
+        <BotIcon
+          className={css({
+            width: "4",
+            height: "4",
+            color: "fg.muted",
+          })}
+        />
+        <span
+          className={css({
+            fontWeight: "medium",
+            fontSize: "sm",
+          })}
+        >
+          {name}
+        </span>
         {model && (
-          <Badge className="font-mono text-xs" variant="secondary">
+          <Badge
+            className={css({
+              fontFamily: "mono",
+              fontSize: "xs",
+            })}
+            variant="subtle"
+          >
             {model}
           </Badge>
         )}
       </div>
     </div>
-  )
+  ),
 );
 
 export type AgentContentProps = ComponentProps<"div">;
 
 export const AgentContent = memo(
   ({ className, ...props }: AgentContentProps) => (
-    <div className={cn("space-y-4 p-4 pt-0", className)} {...props} />
-  )
+    <div
+      className={css(
+        {
+          display: "flex",
+          flexDirection: "column",
+          gap: "4",
+          padding: "4",
+          paddingTop: "0",
+        },
+        className,
+      )}
+      {...props}
+    />
+  ),
 );
 
 export type AgentInstructionsProps = ComponentProps<"div"> & {
@@ -65,27 +113,76 @@ export type AgentInstructionsProps = ComponentProps<"div"> & {
 
 export const AgentInstructions = memo(
   ({ className, children, ...props }: AgentInstructionsProps) => (
-    <div className={cn("space-y-2", className)} {...props}>
-      <span className="font-medium text-muted-foreground text-sm">
+    <div
+      className={css(
+        {
+          display: "flex",
+          flexDirection: "column",
+          gap: "2",
+        },
+        className,
+      )}
+      {...props}
+    >
+      <span
+        className={css({
+          fontWeight: "medium",
+          color: "fg.muted",
+          fontSize: "sm",
+        })}
+      >
         Instructions
       </span>
-      <div className="rounded-md bg-muted/50 p-3 text-muted-foreground text-sm">
+      <div
+        className={css({
+          borderRadius: "l2",
+          backgroundColor: "bg.subtle",
+          padding: "3",
+          color: "fg.muted",
+          fontSize: "sm",
+        })}
+      >
         <p>{children}</p>
       </div>
     </div>
-  )
+  ),
 );
 
-export type AgentToolsProps = ComponentProps<typeof Accordion>;
+export type AgentToolsProps = ComponentProps<typeof Accordion.Root>;
 
 export const AgentTools = memo(({ className, ...props }: AgentToolsProps) => (
-  <div className={cn("space-y-2", className)}>
-    <span className="font-medium text-muted-foreground text-sm">Tools</span>
-    <Accordion className="rounded-md border" {...props} />
+  <div
+    className={css(
+      {
+        display: "flex",
+        flexDirection: "column",
+        gap: "2",
+      },
+      className,
+    )}
+  >
+    <span
+      className={css({
+        fontWeight: "medium",
+        color: "fg.muted",
+        fontSize: "sm",
+      })}
+    >
+      Tools
+    </span>
+    <Accordion.Root
+      className={css({
+        borderRadius: "l2",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "border",
+      })}
+      {...props}
+    />
   </div>
 ));
 
-export type AgentToolProps = ComponentProps<typeof AccordionItem> & {
+export type AgentToolProps = ComponentProps<typeof Accordion.Item> & {
   tool: Tool;
 };
 
@@ -97,22 +194,48 @@ export const AgentTool = memo(
         : tool.inputSchema;
 
     return (
-      <AccordionItem
-        className={cn("border-b last:border-b-0", className)}
+      <Accordion.Item
+        className={css(
+          {
+            borderBottomWidth: "1px",
+            borderBottomStyle: "solid",
+            borderBottomColor: "border",
+          },
+          className,
+        )}
         value={value}
         {...props}
       >
-        <AccordionTrigger className="px-3 py-2 text-sm hover:no-underline">
+        <Accordion.ItemTrigger
+          className={css({
+            paddingX: "3",
+            paddingY: "2",
+            fontSize: "sm",
+            _hover: {
+              textDecoration: "none",
+            },
+          })}
+        >
           {tool.description ?? "No description"}
-        </AccordionTrigger>
-        <AccordionContent className="px-3 pb-3">
-          <div className="rounded-md bg-muted/50">
+        </Accordion.ItemTrigger>
+        <Accordion.ItemContent
+          className={css({
+            paddingX: "3",
+            paddingBottom: "3",
+          })}
+        >
+          <div
+            className={css({
+              borderRadius: "l2",
+              backgroundColor: "bg.subtle",
+            })}
+          >
             <CodeBlock code={JSON.stringify(schema, null, 2)} language="json" />
           </div>
-        </AccordionContent>
-      </AccordionItem>
+        </Accordion.ItemContent>
+      </Accordion.Item>
     );
-  }
+  },
 );
 
 export type AgentOutputProps = ComponentProps<"div"> & {
@@ -121,15 +244,36 @@ export type AgentOutputProps = ComponentProps<"div"> & {
 
 export const AgentOutput = memo(
   ({ className, schema, ...props }: AgentOutputProps) => (
-    <div className={cn("space-y-2", className)} {...props}>
-      <span className="font-medium text-muted-foreground text-sm">
+    <div
+      className={css(
+        {
+          display: "flex",
+          flexDirection: "column",
+          gap: "2",
+        },
+        className,
+      )}
+      {...props}
+    >
+      <span
+        className={css({
+          fontWeight: "medium",
+          color: "fg.muted",
+          fontSize: "sm",
+        })}
+      >
         Output Schema
       </span>
-      <div className="rounded-md bg-muted/50">
+      <div
+        className={css({
+          borderRadius: "l2",
+          backgroundColor: "bg.subtle",
+        })}
+      >
         <CodeBlock code={schema} language="typescript" />
       </div>
     </div>
-  )
+  ),
 );
 
 Agent.displayName = "Agent";
