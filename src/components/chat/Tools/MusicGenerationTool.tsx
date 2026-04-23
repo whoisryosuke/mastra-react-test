@@ -5,7 +5,7 @@ import { Flex, Stack } from "styled-system/jsx";
 import PianoKeySimple from "@/components/music/piano/PianoKeySimple";
 import { useNotePlayer, type NoteWithOctave } from "@/hooks/useNotePlayer";
 import { PlayCircle } from "lucide-react";
-import PianoRoll from "@/components/music/PianoRoll";
+import PianoRoll from "@/components/music/PianoRoll/PianoRoll";
 import type { MidiNote } from "@/types/music";
 
 type Props = ToolItemProps;

@@ -1,3 +1,4 @@
+import { NOTES_ALL_IN_ORDER } from "@/constants/music";
 import { audioContextStore } from "@/store/audio";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
@@ -6,21 +7,6 @@ export type NoteWithOctave = {
   note: string;
   octave: number;
 };
-
-export const NOTES_ALL_IN_ORDER = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
 
 export function calculateDetune(note: string, octave: number = 4) {
   const noteIndex = NOTES_ALL_IN_ORDER.findIndex(
