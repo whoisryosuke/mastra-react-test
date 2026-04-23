@@ -2,6 +2,7 @@ import { type ToolUIPart } from "ai";
 
 export const TOOL_TYPES = {
   getChordTool: "Get Chord",
+  musicGenerationTool: "Music generated",
 } as const;
 
 export type ToolTypes = keyof typeof TOOL_TYPES;

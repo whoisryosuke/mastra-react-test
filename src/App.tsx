@@ -62,7 +62,7 @@ export default function App() {
 
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-      api: "http://localhost:4111/chat/music-theory-agent",
+      api: "http://localhost:4111/chat/music-generation-agent",
     }),
   });
 
