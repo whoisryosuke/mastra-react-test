@@ -30,7 +30,7 @@ import {
   ToolInput,
   ToolOutput,
 } from "@/components/ai-elements/tool";
-import { Box } from "styled-system/jsx";
+import { Box, Stack } from "styled-system/jsx";
 import DebugPanel from "./components/debug/DebugPanel";
 import ToolView from "./components/chat/Tools/ToolView";
 
@@ -82,7 +82,7 @@ export default function App() {
           <Conversation className={css({ height: "full" })}>
             <ConversationContent>
               {messages.map((message) => (
-                <Box key={message.id}>
+                <Stack key={message.id} gap="3">
                   {message.parts?.map((part, i) => {
                     if (part.type === "text") {
                       return (
@@ -106,7 +106,7 @@ export default function App() {
 
                     return null;
                   })}
-                </Box>
+                </Stack>
               ))}
               <ConversationScrollButton />
             </ConversationContent>
