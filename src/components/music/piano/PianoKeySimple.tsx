@@ -4,9 +4,10 @@ import { Flex } from "styled-system/jsx";
 
 type Props = {
   note: string;
+  playing: boolean;
 };
 
-const PianoKeySimple = ({ note }: Props) => {
+const PianoKeySimple = ({ note, playing }: Props) => {
   return (
     <Flex
       p="4"
@@ -15,10 +16,17 @@ const PianoKeySimple = ({ note }: Props) => {
       borderRadius="xl"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor="border"
-      bg="gray.3"
+      borderColor={playing ? "blue.5" : "border"}
+      bg={playing ? "blue.3" : "gray.3"}
+      transition="background-color 120ms ease-out,border-color 120ms ease-out"
     >
-      <Heading as="h4" fontSize="2xl" fontWeight="bold">
+      <Heading
+        as="h4"
+        fontSize="2xl"
+        fontWeight="bold"
+        color={playing ? "blue.10" : "gray.10"}
+        transition="color 120ms ease-out"
+      >
         {note}
       </Heading>
     </Flex>

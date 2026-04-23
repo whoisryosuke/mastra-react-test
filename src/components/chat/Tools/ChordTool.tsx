@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import type { ToolItemProps } from "./types";
-import { Accordion, Badge, Heading, Text } from "@/components/ui";
+import { Accordion, Badge, Button, Heading, Text } from "@/components/ui";
 import { Flex, Stack } from "styled-system/jsx";
 import PianoKeySimple from "@/components/music/piano/PianoKeySimple";
+import { useNotePlayer, type NoteWithOctave } from "@/hooks/useNotePlayer";
+import { PlayCircle } from "lucide-react";
 
 type Chord = {
   name: string;
@@ -16,6 +18,30 @@ type ChordBreakdownProps = {
   chord: Chord;
 };
 const ChordBreakdown = ({ chord }: ChordBreakdownProps) => {
+  const [noteState, setNoteState] = useState(
+    new Array(chord.notes.length).fill(false),
+  );
+  const { play } = useNotePlayer();
+
+  const lightUpNotes = () => {
+    setNoteState(new Array(chord.notes.length).fill(true));
+
+    setTimeout(
+      () => setNoteState(new Array(chord.notes.length).fill(false)),
+      400,
+    );
+  };
+
+  const handlePlay = () => {
+    const notes: NoteWithOctave[] = chord.notes.map((note) => ({
+      note,
+      octave: 4,
+    }));
+    play(notes);
+
+    lightUpNotes();
+  };
+
   return (
     <Flex direction="column" gap="3">
       <Heading as="h2" fontSize="4xl" color="gray.12" fontWeight="bold">
@@ -35,8 +61,15 @@ const ChordBreakdown = ({ chord }: ChordBreakdownProps) => {
 
       <Flex direction="row" gap="1">
         {chord.notes.map((note, index) => (
-          <PianoKeySimple key={`${note}-${index}`} note={note} />
+          <PianoKeySimple
+            key={`${note}-${index}`}
+            note={note}
+            playing={noteState[index]}
+          />
         ))}
+        <Button onClick={handlePlay} colorPalette="blue" size="xs">
+          <PlayCircle />
+        </Button>
       </Flex>
 
       <Flex direction="row" gap="1" alignItems="center">
@@ -61,7 +94,6 @@ const ChordBreakdown = ({ chord }: ChordBreakdownProps) => {
 type Props = ToolItemProps;
 
 const ChordTool = ({ id, index, content, className }: Props) => {
-  console.log("chord tool", content);
   const chords = content.output.chords as Chord[];
   return (
     <Accordion.Root
