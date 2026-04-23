@@ -1,8 +1,9 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineRecipe } from "@pandacss/dev";
 
 export const heading = defineRecipe({
-  className: 'heading',
+  className: "heading",
   base: {
-    fontWeight: 'semibold',
+    fontFamily: "heading",
+    fontWeight: "bold",
   },
-})
+});

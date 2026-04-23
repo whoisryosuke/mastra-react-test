@@ -2,6 +2,8 @@ import * as React from "react";
 import { DefaultChatTransport, type ToolUIPart } from "ai";
 import { useChat } from "@ai-sdk/react";
 import { css, cx } from "styled-system/css";
+// Supports weights 100-900
+import "@fontsource-variable/inter-tight/wght.css";
 
 import {
   PromptInput,
@@ -30,6 +32,7 @@ import {
 } from "@/components/ai-elements/tool";
 import { Box } from "styled-system/jsx";
 import DebugPanel from "./components/debug/DebugPanel";
+import ToolView from "./components/chat/Tools/ToolView";
 
 const appContainer = css({
   position: "relative",
@@ -46,10 +49,6 @@ const conversationContainer = css({
   height: "full",
 });
 
-const toolHeaderStyles = css({
-  cursor: "pointer",
-});
-
 const promptInputStyles = css({
   marginTop: "2",
 });
@@ -63,7 +62,7 @@ export default function App() {
 
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-      api: "http://localhost:4111/chat/weather-agent",
+      api: "http://localhost:4111/chat/music-theory-agent",
     }),
   });
 
@@ -73,6 +72,8 @@ export default function App() {
     sendMessage({ text: input });
     setInput("");
   };
+
+  console.log("messages", messages);
 
   return (
     <>
@@ -95,24 +96,11 @@ export default function App() {
 
                     if (part.type?.startsWith("tool-")) {
                       return (
-                        <Tool key={`${message.id}-${i}`}>
-                          <ToolHeader
-                            type={(part as ToolUIPart).type}
-                            state={
-                              (part as ToolUIPart).state || "output-available"
-                            }
-                            className={toolHeaderStyles}
-                          />
-                          <ToolContent>
-                            <ToolInput
-                              input={(part as ToolUIPart).input || {}}
-                            />
-                            <ToolOutput
-                              output={(part as ToolUIPart).output}
-                              errorText={(part as ToolUIPart).errorText}
-                            />
-                          </ToolContent>
-                        </Tool>
+                        <ToolView
+                          content={part as ToolUIPart}
+                          id={message.id}
+                          index={i}
+                        />
                       );
                     }
 
@@ -129,7 +117,7 @@ export default function App() {
                 onChange={(e) => setInput(e.target.value)}
                 className={textareaStyles}
                 value={input}
-                placeholder="Ask about the weather..."
+                placeholder="Ask about music..."
                 disabled={status !== "ready"}
               />
             </PromptInputBody>

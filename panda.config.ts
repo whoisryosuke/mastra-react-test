@@ -54,6 +54,12 @@ export default defineConfig({
         colors: colors,
         durations: durations,
         zIndex: zIndex,
+
+        fonts: {
+          body: { value: "var(--oat-font-family-body)" },
+          heading: { value: "var(--oat-font-family-heading)" },
+          mono: { value: "var(--oat-font-family-mono)" },
+        },
       },
 
       semanticTokens: {
@@ -127,4 +133,9 @@ export default defineConfig({
 
   globalCss: globalCss,
   conditions: conditions,
+  globalVars: {
+    "--oat-font-family-body": `"Inter Tight Variable", sans-serif`,
+    "--oat-font-family-heading": `"Inter Tight Variable", sans-serif`,
+    "--oat-font-family-mono": `"Fira Code Variable", monospace`,
+  },
 });
