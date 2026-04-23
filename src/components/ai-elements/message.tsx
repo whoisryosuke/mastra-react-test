@@ -23,32 +23,59 @@ import { Streamdown } from "streamdown";
 import { Box } from "styled-system/jsx";
 import { css, cx } from "styled-system/css";
 import { cn } from "@/lib/utils";
+import "@/theme/message.css";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   from: UIMessage["role"];
 };
 
+const messageStyles = css({
+  display: "flex",
+  width: "full",
+  maxWidth: "95%",
+  flexDirection: "column",
+  gap: "2",
+});
+
+const userStyles = css({
+  bg: "gray.3",
+  borderRadius: "xl",
+  py: "4",
+  px: "5",
+  marginLeft: "auto",
+  justifyContent: "flex-end",
+});
+
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div
-    className={css(
-      {
-        display: "flex",
-        width: "full",
-        maxWidth: "95%",
-        flexDirection: "column",
-        gap: "2",
-      },
-      from === "user"
-        ? css({
-            marginLeft: "auto",
-            justifyContent: "flex-end",
-          })
-        : css({}),
-      className,
-    )}
+    className={cx(messageStyles, from === "user" && userStyles)}
     {...props}
   />
 );
+
+const messageContentStyles = css({
+  display: "flex",
+  width: "fit",
+  minWidth: "0",
+  maxWidth: "full",
+  flexDirection: "column",
+  gap: "2",
+  overflow: "hidden",
+  fontSize: "sm",
+  _group: {
+    _user: {
+      marginLeft: "auto",
+      borderRadius: "l2",
+      backgroundColor: "bg.subtle",
+      paddingX: "4",
+      paddingY: "3",
+      color: "fg.default",
+    },
+    _assistant: {
+      color: "fg.default",
+    },
+  },
+});
 
 export type MessageContentProps = HTMLAttributes<HTMLDivElement>;
 
@@ -59,32 +86,7 @@ export const MessageContent = ({
 }: MessageContentProps) => (
   <Box
     color="fg.default"
-    className={css(
-      {
-        display: "flex",
-        width: "fit",
-        minWidth: "0",
-        maxWidth: "full",
-        flexDirection: "column",
-        gap: "2",
-        overflow: "hidden",
-        fontSize: "sm",
-        _group: {
-          _user: {
-            marginLeft: "auto",
-            borderRadius: "l2",
-            backgroundColor: "bg.subtle",
-            paddingX: "4",
-            paddingY: "3",
-            color: "fg.default",
-          },
-          _assistant: {
-            color: "fg.default",
-          },
-        },
-      },
-      className,
-    )}
+    className={cx(messageContentStyles, className)}
     {...props}
   >
     {children}
@@ -271,6 +273,18 @@ export const StreamdownRenderer = (props: StreamdownRendererProps) => (
   <Streamdown components={streamdownComponents} {...props} />
 );
 
+const messageReasoningContentStyles = css({
+  display: "flex",
+  flexDirection: "column",
+  gap: "2",
+  padding: "3",
+  borderRadius: "l2",
+  backgroundColor: "bg.subtle",
+  fontSize: "sm",
+  color: "fg.muted",
+  fontFamily: "mono",
+});
+
 export type MessageReasoningContentProps = HTMLAttributes<HTMLDivElement>;
 
 export const MessageReasoningContent = ({
@@ -278,23 +292,7 @@ export const MessageReasoningContent = ({
   children,
   ...props
 }: MessageReasoningContentProps) => (
-  <div
-    className={css(
-      {
-        display: "flex",
-        flexDirection: "column",
-        gap: "2",
-        padding: "3",
-        borderRadius: "l2",
-        backgroundColor: "bg.subtle",
-        fontSize: "sm",
-        color: "fg.muted",
-        fontFamily: "mono",
-      },
-      className,
-    )}
-    {...props}
-  >
+  <div className={cx(messageReasoningContentStyles, className)} {...props}>
     {children}
   </div>
 );
@@ -524,6 +522,7 @@ export const MessageResponse = memo(
     <Streamdown
       className={cx(
         css({
+          fontSize: "md",
           w: "full",
           h: "full",
           "& > :first-of-type": { mt: "0" },

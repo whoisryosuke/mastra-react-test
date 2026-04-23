@@ -1,0 +1,16 @@
+[data-streamdown="ordered-list"] {
+  list-style: decimal;
+}
+
+[data-streamdown="unordered-list"] {
+  list-style: disc;
+}
+
+[data-streamdown="unordered-list"],
+[data-streamdown="ordered-list"] {
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+}
+[data-streamdown="list-item"] {
+  padding-bottom: 0.2rem;
+}
