@@ -26,7 +26,7 @@ const ChordBreakdown = ({ chord }: ChordBreakdownProps) => {
           Aliases
         </Text>
         {chord.aliases.map((alias) => (
-          <Badge colorPalette="gray" borderRadius="full" size="xl">
+          <Badge colorPalette="gray" borderRadius="full" size="2xl">
             {chord.tonic}
             {alias}
           </Badge>
@@ -48,7 +48,7 @@ const ChordBreakdown = ({ chord }: ChordBreakdownProps) => {
             colorPalette="gray"
             variant="outline"
             borderRadius="full"
-            size="xl"
+            size="2xl"
           >
             {interval}
           </Badge>

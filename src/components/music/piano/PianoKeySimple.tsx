@@ -10,7 +10,8 @@ const PianoKeySimple = ({ note }: Props) => {
   return (
     <Flex
       p="4"
-      pt="16"
+      pt="20"
+      pb="2"
       borderRadius="xl"
       borderWidth="1px"
       borderStyle="solid"
