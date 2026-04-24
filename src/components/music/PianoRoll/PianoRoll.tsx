@@ -1,4 +1,4 @@
-import { Box, Flex } from "styled-system/jsx";
+import { Box, Flex, Stack } from "styled-system/jsx";
 import { Text as UiText } from "@/components/ui";
 import React, { useMemo } from "react";
 import type { MidiNote } from "@/types/music";
@@ -12,29 +12,19 @@ type Props = {
 };
 
 const PianoRoll = ({ notes }: Props) => {
-  const sortedNotes = notes.reduce(
-    (merge, note) => {
-      const noteMetadata = Note.get(note.pitch);
+  const sortedNotes = notes.map((note) => {
+    const noteMetadata = Note.get(note.pitch);
+    return {
+      note,
+      metadata: noteMetadata,
+    } as PianoRollNoteData;
+  });
 
-      const octave = noteMetadata.oct;
-      if (octave) {
-        if (!(octave in merge)) merge[octave] = {};
-        if (!(noteMetadata.letter in merge[octave]))
-          merge[octave][noteMetadata.letter] = [];
-        merge[octave][noteMetadata.letter].push({
-          note,
-          metadata: noteMetadata,
-        });
-      }
+  const octaveRange = sortedNotes.reduce(
+    (minMax, noteData) => {
+      const octave = noteData.metadata.oct;
+      if (!octave) return minMax;
 
-      return merge;
-    },
-    {} as Record<string, Record<string, PianoRollNoteData[]>>,
-  );
-
-  const octaveRange = Object.keys(sortedNotes).reduce(
-    (minMax, rawOctave) => {
-      const octave = parseInt(rawOctave);
       if (octave < minMax.min) {
         minMax.min = octave;
       }
@@ -46,10 +36,12 @@ const PianoRoll = ({ notes }: Props) => {
     { min: 100, max: 0 },
   );
 
-  const numLanes = Math.min(octaveRange.max - octaveRange.min, 8);
+  console.log("sortedNotes", sortedNotes, octaveRange);
+
+  const numLanes = Math.min(octaveRange.max - octaveRange.min, 7) + 1;
 
   const renderRow = (noteLetter, index, octave) => (
-    <PianoRow octave={octave} notes={sortedNotes[octave][noteLetter]} />
+    <PianoRow octave={octave} noteLetter={noteLetter} notes={sortedNotes} />
   );
   const renderOctave = (_, octave) =>
     NOTES_ALL_IN_ORDER.map((noteLetter, index) =>
@@ -57,7 +49,11 @@ const PianoRoll = ({ notes }: Props) => {
     );
   const renderLanes = new Array(numLanes).fill(0).map(renderOctave);
 
-  return <div>{renderLanes}</div>;
+  return (
+    <Stack overflowX="auto" gap="0">
+      {renderLanes}
+    </Stack>
+  );
 };
 
 export default PianoRoll;

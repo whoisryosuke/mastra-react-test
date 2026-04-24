@@ -4,7 +4,7 @@ import { Accordion, Badge, Button, Heading, Text } from "@/components/ui";
 import { Flex, Stack } from "styled-system/jsx";
 import PianoKeySimple from "@/components/music/piano/PianoKeySimple";
 import { useNotePlayer, type NoteWithOctave } from "@/hooks/useNotePlayer";
-import { PlayCircle } from "lucide-react";
+import { DownloadIcon, PlayCircle } from "lucide-react";
 import PianoRoll from "@/components/music/PianoRoll/PianoRoll";
 import type { MidiNote } from "@/types/music";
 
@@ -25,12 +25,19 @@ const MusicGenerationTool = ({ id, index, content, className }: Props) => {
     >
       <Accordion.Item value={id} borderBottom="0">
         <Accordion.ItemTrigger>
-          <Heading as="h3">Found chord...</Heading>
+          <Heading as="h3">Generated MIDI melody...</Heading>
           <Accordion.ItemIndicator />
         </Accordion.ItemTrigger>
         <Accordion.ItemContent>
           <Accordion.ItemBody>
-            <PianoRoll notes={notes} />
+            <Stack>
+              <Stack direction="row">
+                <Button size="2xs" bg="blue.7">
+                  <DownloadIcon /> Export MIDI
+                </Button>
+              </Stack>
+              <PianoRoll notes={notes} />
+            </Stack>
           </Accordion.ItemBody>
         </Accordion.ItemContent>
       </Accordion.Item>

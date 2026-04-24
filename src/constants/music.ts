@@ -12,3 +12,5 @@ export const NOTES_ALL_IN_ORDER = [
   "A#",
   "B",
 ];
+
+export const NOTE_LETTERS_BLACK = ["C#", "D#", "F#", "G#", "A#"];
