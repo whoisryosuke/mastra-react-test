@@ -6,7 +6,7 @@ There's also a music theory agent that can teach about music concepts, and has s
 
 ## Requirements
 
-- Mastra Server app
+- [Mastra Server app](https://github.com/whoisryosuke/mastra-server-test)
 - Local or cloud LLM
 
 I used LM Studio locally with Qwen Coder 30B model (works well with tools).
@@ -14,7 +14,7 @@ I used LM Studio locally with Qwen Coder 30B model (works well with tools).
 ## Development
 
 1. Spin up local LLM server if needed.
-1. Spin up server app.
+1. Spin up [server app](https://github.com/whoisryosuke/mastra-server-test).
 1. Install deps: `yarn`
 1. Spin up this app: `yarn dev`
 
