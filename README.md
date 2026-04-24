@@ -1,73 +1,35 @@
-# React + TypeScript + Vite
+# Music Agent using Mastra
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a music generation agent that can generate MIDI notes for user. The app displays the MIDI notes as piano roll.
 
-Currently, two official plugins are available:
+There's also a music theory agent that can teach about music concepts, and has special tools for visualizing music information.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Requirements
 
-## React Compiler
+- Mastra Server app
+- Local or cloud LLM
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+I used LM Studio locally with Qwen Coder 30B model (works well with tools).
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Spin up local LLM server if needed.
+1. Spin up server app.
+1. Install deps: `yarn`
+1. Spin up this app: `yarn dev`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Chat should be available at http://localhost:5173/
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## How to use
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Just ask anything like "C minor piano melody" and it will use the `musicGenerationTool` (see server for details) to provide user with MIDI data in a JSON format. This app gets that JSON data and visualizes it in a piano roll using the `<MusicGenerationTool />`
+
+> The "music generation" happens in your LLM model - there's nothing happening on the server or client, we just take JSON data the LLM provides and show it to user. So the quality of the music generation will vary based on the model you pick, and any influence you give it (like providing reference material).
+
+### Music Theory Agent
+
+There's also a music theory agent available. You can access this by changing the chat URL in the `useChat` hook in `App.tsx`.
+
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+http://localhost:4111/chat/music-theory-agent
 ```
